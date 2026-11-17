@@ -11,3 +11,6 @@ coverage/
 .npmrc
 *.pem
 *.key
+
+.vercel
+.env*
