@@ -8,7 +8,7 @@ configure({ asyncUtilTimeout: 3000 })
 afterEach(() => {
   cleanup()
   localStorage.clear()
-  window.location.hash = ''
+  window.history.replaceState(null, '', '/')
 })
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

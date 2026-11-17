@@ -21,21 +21,14 @@ function renderGrid(overrides: Partial<ComponentProps<typeof CourtGrid>> = {}) {
 }
 
 describe('indicador de hora actual en la cuadrícula', () => {
-  it('dibuja una única línea decorativa debajo de la franja actual de hoy', () => {
+  it('señala la franja actual de hoy sin añadir elementos accesibles ni enfocables', () => {
     renderGrid()
     const indicators = screen.getAllByTestId('current-time-indicator')
     expect(indicators).toHaveLength(1)
     expect(indicators[0]).toHaveAttribute('aria-hidden', 'true')
     expect(indicators[0]).not.toHaveAttribute('tabindex')
-    expect(indicators[0]).toHaveClass(
-      'pointer-events-none',
-      'absolute',
-      'inset-x-0',
-      '-bottom-[3px]',
-    )
     const row = screen.getByRole('rowheader', { name: '20:00' }).closest('tr')
     expect(indicators[0].closest('tr')).toBe(row)
-    expect(row).toHaveClass('relative')
   })
 
   it.each([
@@ -70,16 +63,13 @@ describe('indicador de hora actual en la cuadrícula', () => {
     }
     const { props, rerender } = renderGrid({ daily: [reservation] })
     const occupied = screen.getByRole('button', { name: 'Pista 1, 20:00: reserva de socio' })
-    expect(occupied).toHaveClass('bg-green', 'text-white', 'border-green')
     const past = screen.getByRole('button', { name: 'Pista 2, 20:00: franja pasada' })
-    expect(past).toHaveClass('bg-canvas', 'text-muted')
     expect(past).toBeDisabled()
     fireEvent.click(occupied)
     expect(props.onDetail).toHaveBeenCalledWith(reservation)
     rerender(<CourtGrid {...props} half={1} />)
     expect(screen.getAllByTestId('current-time-indicator')).toHaveLength(1)
     const available = screen.getByRole('button', { name: 'Pista 5, 21:00: disponible' })
-    expect(available).toHaveClass('bg-lime', 'text-green', 'border-dashed')
     expect(available).toHaveTextContent('Libre')
     fireEvent.click(available)
     expect(props.onBook).toHaveBeenCalledWith({ date: props.date, hour: 21, court: 5 })

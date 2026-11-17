@@ -1,5 +1,8 @@
-@import 'tailwindcss';
+/* Keep Tailwind's reset below both sets of utilities. */
+@layer theme, base, components, utilities;
+/* Load the library utilities first so app responsive variants take precedence. */
 @import '@doscientos/ui/styles.css';
+@import 'tailwindcss';
 @import './styles/base.css';
 @import './styles/print.css';
 

@@ -76,6 +76,10 @@ demostrar los flujos, pero no sustituyen autorización en servidor.
 
 - `app/app.tsx` solo compone router, proveedor y límite de errores.
   `club-shell` coordina el layout; `app/layout` contiene sus piezas visuales.
+- `app/session-routes.tsx` separa `/login` del área privada y espera a validar
+  la sesión antes de mostrarla. Sin perfil redirige a `/login`; con sesión,
+  `/login` redirige al calendario. `BrowserRouter` usa URLs sin `#` y Vercel
+  reescribe las rutas de aplicación a `index.html` para admitir recargas directas.
 - `app/app-routes.tsx` centraliza rutas y navegación por rol. Las rutas restringidas
   y desconocidas redirigen al calendario; el dominio vuelve a comprobar permisos.
 - Cada funcionalidad conserva sus componentes y hooks: calendario en

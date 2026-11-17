@@ -27,7 +27,7 @@ export function AccountSelection({ onDone = () => {} }: { onDone?: () => void })
   const pendingSession = useRef<Parameters<typeof acceptSession>[0] | null>(null)
   const finish = () => {
     if (pendingSession.current) acceptSession(pendingSession.current)
-    navigate('/')
+    navigate('/', { replace: true })
     onDone()
   }
   const login = async (id: string, password?: string) => {
@@ -36,7 +36,9 @@ export function AccountSelection({ onDone = () => {} }: { onDone?: () => void })
       return true
     })
     if (result) {
-      navigate(profiles.find((item) => item.id === id)?.mustChangePassword ? '/cuenta' : '/')
+      navigate(profiles.find((item) => item.id === id)?.mustChangePassword ? '/cuenta' : '/', {
+        replace: true,
+      })
       onDone()
     }
   }

@@ -131,7 +131,7 @@ describe('flujos reales con localStorage, sin backend', () => {
   it('guarda horarios y cuotas decimales desde administración', async () => {
     const { gateway, repository } = clubFixture()
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/configuracion'
+    window.history.replaceState(null, '', '/configuracion')
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     await user.click(await screen.findByRole('tab', { name: 'Cuotas' }))
@@ -152,7 +152,7 @@ describe('flujos reales con localStorage, sin backend', () => {
   it('registra y anula cuotas por socio desde administración, manteniendo los documentos', async () => {
     const { gateway, repository, seed } = clubFixture()
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/pagos'
+    window.history.replaceState(null, '', '/pagos')
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     await screen.findByRole('heading', { name: 'Control de suscripciones' })

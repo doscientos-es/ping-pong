@@ -25,7 +25,7 @@ describe('actualizaciones recibidas de otra pestaña (eventos simulados)', () =>
     const { gateway, seed } = clubFixture()
     const user = userEvent.setup()
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/configuracion'
+    window.history.replaceState(null, '', '/configuracion')
     render(<App gateway={gateway} />)
     await user.click(await screen.findByRole('tab', { name: 'Cuotas' }))
     const price = await screen.findByLabelText('Cuota mensual (€)')
@@ -41,7 +41,7 @@ describe('actualizaciones recibidas de otra pestaña (eventos simulados)', () =>
     const { gateway, repository, seed } = clubFixture()
     const user = userEvent.setup()
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/configuracion'
+    window.history.replaceState(null, '', '/configuracion')
     render(<App gateway={gateway} />)
     await user.click(await screen.findByRole('tab', { name: 'Cuotas' }))
     const price = await screen.findByLabelText('Cuota mensual (€)')

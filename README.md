@@ -16,7 +16,10 @@ servicios de identidad externos. Todo se conserva en `localStorage` del navegado
 
 ## Probar los perfiles
 
-El primer acceso muestra una lista de cuentas. Los perfiles de ejemplo siguen
+Sin sesión, cualquier ruta redirige a `/login`, donde se elige la cuenta. Con sesión,
+`/` abre el calendario y `/login` redirige a `/`. Las URLs no utilizan `#`; Vercel
+sirve la aplicación también al abrir o recargar una ruta directamente.
+Los perfiles de ejemplo siguen
 sin contraseña hasta configurarla en **Menú de usuario → Ajustes de cuenta**.
 Las cuentas nuevas y las invitaciones requieren contraseña local. El menú permite
 cambiar de perfil y cerrar sesión sin borrar los datos del club.

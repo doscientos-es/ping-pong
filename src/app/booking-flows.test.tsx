@@ -85,7 +85,7 @@ describe('reserva guiada y gestión con persistencia real', () => {
     expect(confirmation).not.toHaveTextContent(/60\s*min/)
     expect(within(confirmation).getByRole('link', { name: 'Ver mis reservas' })).toHaveAttribute(
       'href',
-      '#/reservas',
+      '/reservas',
     )
     const state = await repository.read()
     expect(state.reservations).toHaveLength(1)
@@ -210,7 +210,7 @@ describe('reserva guiada y gestión con persistencia real', () => {
   it('copia horarios solo al borrador, permite descartarlos y guarda un cierre', async () => {
     const { gateway, repository, seed } = clubFixture()
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/configuracion'
+    window.history.replaceState(null, '', '/configuracion')
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     await screen.findByLabelText('Apertura Lunes franja 1')

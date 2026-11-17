@@ -38,7 +38,7 @@ describe('reservas e históricos filtrados y paginados con repositorio real', ()
       ]
     })
     const persisted = localStorage.getItem(DATABASE_KEY)
-    window.location.hash = '#/reservas'
+    window.history.replaceState(null, '', '/reservas')
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     const region = await screen.findByRole('region', { name: 'Resultados de reservas' })
@@ -85,7 +85,7 @@ describe('reservas e históricos filtrados y paginados con repositorio real', ()
     await repository.transact((state) => {
       state.reservations = [...reservations(today, 1000, -1), ...reservations(today, 1)]
     })
-    window.location.hash = '#/historial'
+    window.history.replaceState(null, '', '/historial')
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     const region = await screen.findByRole('region', { name: 'Resultados de reservas' })
@@ -140,7 +140,7 @@ describe('reservas e históricos filtrados y paginados con repositorio real', ()
     })
     expect((await gateway.view('alba')).subscriptionActive).toBe(true)
     const persisted = localStorage.getItem(DATABASE_KEY)
-    window.location.hash = '#/pagos'
+    window.history.replaceState(null, '', '/pagos')
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     await user.click(await screen.findByRole('button', { name: 'Ver historial completo' }))

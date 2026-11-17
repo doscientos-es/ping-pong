@@ -1,18 +1,18 @@
-import { HashRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 
 import type { ClubGateway } from '../features/club/application/ports'
 import { ClubProvider } from './club-context'
-import { ClubShell } from './club-shell'
 import { ErrorBoundary } from './error-boundary'
+import { SessionRoutes } from './session-routes'
 
 export function App({ gateway }: { gateway: ClubGateway }) {
   return (
     <ErrorBoundary>
-      <HashRouter>
+      <BrowserRouter>
         <ClubProvider gateway={gateway}>
-          <ClubShell />
+          <SessionRoutes />
         </ClubProvider>
-      </HashRouter>
+      </BrowserRouter>
     </ErrorBoundary>
   )
 }

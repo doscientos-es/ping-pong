@@ -23,16 +23,17 @@ const assets = readdirSync(dist, { recursive: true }).filter(
   (file) => typeof file === 'string' && /\.(html|js|css|png|svg|woff2|webmanifest)$/.test(file),
 )
 assert.ok(assets.includes('index.html') && assets.includes('sw.js'), 'Build the PWA first')
+const pages = ['/', '/login', '/reservas', '/cuenta', '/configuracion']
 
 await Promise.all(
-  ['/', ...assets].map(async (file) => {
+  [...pages, ...assets].map(async (file) => {
     const response = await fetch(new URL(file.replaceAll('\\', '/'), base), {
       credentials: 'omit',
       redirect: 'error',
       signal: AbortSignal.timeout(10000),
     })
     assert.equal(response.status, 200, `HTTP error: ${file}`)
-    const builtFile = file === '/' ? 'index.html' : file
+    const builtFile = pages.includes(file) ? 'index.html' : file
     const extension = builtFile.split('.').at(-1)
     assert.match(
       response.headers.get('content-type') ?? '',
@@ -51,5 +52,5 @@ await Promise.all(
   }),
 )
 console.log(
-  `Preview HTTP OK: root and ${assets.length} production files match the build and have valid content types.`,
+  `Preview HTTP OK: ${pages.length} application routes and ${assets.length} production files match the build and have valid content types.`,
 )

@@ -15,6 +15,7 @@ async function signOut(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole('button', { name: 'Menú de usuario' }))
   await user.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
   await screen.findByRole('button', { name: 'Crear cuenta local' })
+  expect(window.location.pathname).toBe('/login')
 }
 
 describe('selección de cuentas y sesiones persistentes', () => {
@@ -28,9 +29,10 @@ describe('selección de cuentas y sesiones persistentes', () => {
       temporaryPassword: crypto.randomUUID(),
     })
     localStorage.setItem('spin-club:profile', account.id)
-    window.location.hash = '#/contabilidad'
+    window.history.replaceState(null, '', '/contabilidad')
     render(<App gateway={gateway} />)
     await screen.findByRole('button', { name: /Cuenta protegida/ })
+    expect(window.location.pathname).toBe('/login')
     expect(screen.queryByRole('heading', { name: 'Contabilidad' })).not.toBeInTheDocument()
   })
 
@@ -46,6 +48,7 @@ describe('selección de cuentas y sesiones persistentes', () => {
     }
     await act(async () => receiveSignOut())
     await screen.findByRole('button', { name: 'Crear cuenta local' })
+    expect(window.location.pathname).toBe('/login')
     await act(async () => receiveSignOut())
     expect(screen.getByRole('button', { name: 'Crear cuenta local' })).toBeInTheDocument()
     expect(screen.queryByLabelText('Ir a una fecha')).not.toBeInTheDocument()
@@ -58,9 +61,11 @@ describe('selección de cuentas y sesiones persistentes', () => {
     const user = userEvent.setup()
     let app = render(<App gateway={gateway} />)
     await screen.findByRole('button', { name: /Álex · Administración/ })
+    expect(window.location.pathname).toBe('/login')
     expect(screen.queryByLabelText('Contraseña')).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /Álex · Administración/ }))
     await screen.findByRole('heading', { name: 'Calendario del club' })
+    expect(window.location.pathname).toBe('/')
     app.unmount()
     app = render(<App gateway={gateway} />)
     await screen.findByRole('heading', { name: 'Calendario del club' })
@@ -75,7 +80,7 @@ describe('selección de cuentas y sesiones persistentes', () => {
   it('invita, cambia la contraseña temporal sin cuota, recupera acceso y mantiene la contraseña fuera de storage', async () => {
     const { gateway } = clubFixture()
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/socios'
+    window.history.replaceState(null, '', '/socios')
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     await user.click(await screen.findByRole('button', { name: 'Invitar usuario' }))

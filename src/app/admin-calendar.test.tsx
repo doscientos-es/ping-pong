@@ -26,7 +26,7 @@ describe('cabecera del calendario de administración', () => {
     const actions = screen.getByRole('group', { name: 'Acciones del calendario' })
     expect(within(actions).getByRole('link', { name: 'Editar horarios' })).toHaveAttribute(
       'href',
-      '#/configuracion',
+      '/configuracion',
     )
     const user = userEvent.setup()
     await user.click(within(actions).getByRole('button', { name: 'Nueva reserva' }))

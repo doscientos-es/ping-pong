@@ -15,7 +15,7 @@ describe('módulos administrativos en pestañas con repositorio real', () => {
     const { gateway, repository, seed, slot } = clubFixture()
     await gateway.book('alba', slot)
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/configuracion'
+    window.history.replaceState(null, '', '/configuracion')
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     await screen.findByRole('tabpanel', { name: 'Horarios' })
@@ -55,7 +55,7 @@ describe('módulos administrativos en pestañas con repositorio real', () => {
   it('mantiene la búsqueda de socios al gestionar roles desde su módulo', async () => {
     const { gateway, repository } = clubFixture()
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/socios'
+    window.history.replaceState(null, '', '/socios')
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     await screen.findByRole('tabpanel', { name: 'Socios' })
@@ -78,7 +78,7 @@ describe('módulos administrativos en pestañas con repositorio real', () => {
   it('conserva los parámetros contables sin guardar y los filtros entre módulos', async () => {
     const { gateway, repository } = clubFixture()
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/contabilidad'
+    window.history.replaceState(null, '', '/contabilidad')
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     await user.click(await screen.findByRole('tab', { name: 'Parámetros' }))
@@ -102,7 +102,7 @@ describe('módulos administrativos en pestañas con repositorio real', () => {
   it('mantiene el estado de comprobantes al volver a la gestión de cuotas', async () => {
     const { gateway } = clubFixture()
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/pagos'
+    window.history.replaceState(null, '', '/pagos')
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     await screen.findByRole('tabpanel', { name: 'Cuotas' })

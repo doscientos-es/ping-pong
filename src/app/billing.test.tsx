@@ -11,7 +11,7 @@ describe('configuración y formularios fiscales con repositorio local real', () 
   it('valida el emisor, conserva su borrador entre pestañas y guarda/descarta los datos fiscales', async () => {
     const { gateway, repository } = clubFixture()
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/configuracion'
+    window.history.replaceState(null, '', '/configuracion')
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     await user.click(await screen.findByRole('tab', { name: 'Datos fiscales' }))
@@ -52,7 +52,7 @@ describe('configuración y formularios fiscales con repositorio local real', () 
   it('crea y edita socios con DNI y dirección sin perder sus datos', async () => {
     const { gateway, repository } = clubFixture()
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/socios'
+    window.history.replaceState(null, '', '/socios')
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     await user.click(await screen.findByRole('button', { name: 'Nuevo socio' }))

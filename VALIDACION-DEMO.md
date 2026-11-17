@@ -22,13 +22,13 @@ Desde `clients/pingpong`:
 El smoke test HTTP comprueba contenido y tipo de todos los archivos de la build,
 incluidos fuentes, iconos, chunks y service worker. Detecta previews obsoletas y
 archivos que devuelven el HTML de la aplicación en lugar de su contenido real.
+También comprueba que las rutas directas sirven la aplicación.
 **No prueba instalación, caché offline ni renderizado.**
 
 ## Cobertura automatizada
 
-Última ejecución: `pnpm quality` correcto (186/186 tests en 36 archivos, TypeScript, lint,
-build y archivos PWA). La verificación HTTP de preview registrada anteriormente
-fue correcta; no se ha repetido para este ajuste de presentación móvil.
+Última ejecución: `pnpm quality` correcto (195/195 tests en 36 archivos, TypeScript, lint,
+build y archivos PWA). Preview HTTP local: cinco rutas y 21 archivos correctos.
 La build avisa de un chunk principal de unos 753 kB minificados; no bloquea
 la compilación ni sustituye las comprobaciones manuales siguientes.
 Vite también avisa de una importación sin extensión en su configuración para

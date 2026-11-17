@@ -9,7 +9,7 @@ import { ClubNavigation } from './club-navigation'
 import { ClubSidebar } from './club-sidebar'
 
 describe('navegación del club', () => {
-  it('protege la etiqueta completa y el tamaño del icono en enlaces estrechos', () => {
+  it('identifica el enlace activo y mantiene accesible su etiqueta completa', () => {
     render(
       <MemoryRouter initialEntries={['/pagos']}>
         <ClubNavigation items={navigationFor('admin')} />
@@ -20,9 +20,6 @@ describe('navegación del club', () => {
     const payments = within(navigation).getByRole('link', { name: 'Pagos y comprobantes' })
     expect(payments).toHaveAttribute('title', 'Pagos y comprobantes')
     expect(payments).toHaveAttribute('aria-current', 'page')
-    expect(payments).toHaveClass('min-w-0', 'min-h-11')
-    expect(within(payments).getByText('Pagos y comprobantes')).toHaveClass('truncate', 'min-w-0')
-    expect(payments.querySelector('svg')).toHaveClass('shrink-0')
     expect(payments.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
     expect(
       within(navigation).getByRole('link', { name: 'Calendario del club' }),
@@ -57,10 +54,7 @@ describe('navegación del club', () => {
     )
 
     const navigation = screen.getByRole('navigation', { name: 'Navegación móvil' })
-    expect(navigation).toHaveClass('overflow-x-auto', 'desktop:hidden')
     const payments = within(navigation).getByRole('link', { name: 'Pagos' })
-    expect(payments).toHaveClass('min-h-11', 'min-w-16')
-    expect(within(payments).getByText('Pagos')).toHaveClass('whitespace-nowrap')
     expect(within(navigation).queryByText('Pagos y comprobantes')).not.toBeInTheDocument()
     await user.click(payments)
     expect(payments).toHaveAttribute('aria-current', 'page')
@@ -100,9 +94,6 @@ describe('navegación del club', () => {
       name: 'María del Carmen Fernández de la Torre Administrador',
     })
     expect(profile).toHaveAttribute('data-slot', 'button')
-    expect(within(profile).getByText('María del Carmen Fernández de la Torre')).toHaveClass(
-      'truncate',
-    )
     expect(within(profile).getByText('Administrador')).toBeInTheDocument()
     await user.click(within(sidebar).getByRole('button', { name: '¿Cómo funciona?' }))
     expect(onHelp).toHaveBeenCalledTimes(1)

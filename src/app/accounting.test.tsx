@@ -14,7 +14,7 @@ describe('contabilidad administrativa con repositorio real', () => {
   it('crea una factura, la conserva al recargar, edita el cobro y anula sin borrar historial', async () => {
     const { gateway, repository, now } = clubFixture()
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/contabilidad'
+    window.history.replaceState(null, '', '/contabilidad')
     const user = userEvent.setup()
     const app = render(<App gateway={gateway} />)
     await screen.findByRole('heading', { name: 'Contabilidad', level: 1 })

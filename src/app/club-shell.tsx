@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { DemoHelpDialog } from '../features/session/demo-help-dialog'
-import { AccountSelection, ProfileSwitcher } from '../features/session/profile-switcher'
+import { ProfileSwitcher } from '../features/session/profile-switcher'
 import { CLUB_NAME } from '../shared/brand'
 import { useOnlineStatus } from '../shared/use-online-status'
 import { navigationFor } from './app-routes'
@@ -14,7 +14,7 @@ import { ClubSidebar } from './layout/club-sidebar'
 import { usePageEffects } from './use-page-effects'
 
 export function ClubShell() {
-  const { profiles, selectedId, loading, error } = useClub()
+  const { profiles, selectedId } = useClub()
   const [dialog, setDialog] = useState<'profiles' | 'help' | null>(null)
   const online = useOnlineStatus()
   const { pathname } = useLocation()
@@ -27,14 +27,6 @@ export function ClubShell() {
   const openProfiles = () => setDialog('profiles')
   const closeDialog = () => setDialog(null)
   usePageEffects(title, selectedId)
-
-  if (!selectedId && !loading)
-    return (
-      <main className="mx-auto grid min-h-dvh max-w-lg content-center gap-4 px-4 py-8">
-        <h1 className="text-lg">{CLUB_NAME}</h1>
-        {error ? <p role="alert">{error}</p> : <AccountSelection />}
-      </main>
-    )
 
   return (
     <div className="min-h-dvh">

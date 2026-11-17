@@ -22,7 +22,7 @@ describe('catálogo de cuotas y selección en altas con repositorio real', () =>
     const hugo = seed.members.find((member) => member.id === 'hugo')!
     await gateway.saveMember('admin', { ...hugo, planId: flexible.id }, hugo.id)
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/contabilidad'
+    window.history.replaceState(null, '', '/contabilidad')
     render(<App gateway={gateway} />)
     const forecast = await screen.findByText('Previsión mensual bruta')
     expect(forecast.nextElementSibling?.textContent).toBe(money(7 * 3900 + flexible.priceCents))
@@ -34,7 +34,7 @@ describe('catálogo de cuotas y selección en altas con repositorio real', () =>
   it('configura varias cuotas, conserva el borrador y permite elegir al crear un socio', async () => {
     const { gateway, repository } = clubFixture()
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/configuracion'
+    window.history.replaceState(null, '', '/configuracion')
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     await user.click(await screen.findByRole('tab', { name: 'Cuotas' }))
@@ -79,7 +79,7 @@ describe('catálogo de cuotas y selección en altas con repositorio real', () =>
       plans: [...seed.settings.plans, flexible],
     })
     localStorage.setItem('spin-club:profile', 'admin')
-    window.location.hash = '#/socios'
+    window.history.replaceState(null, '', '/socios')
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     await user.click(await screen.findByRole('button', { name: 'Invitar usuario' }))
