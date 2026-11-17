@@ -10,7 +10,6 @@ function renderGrid(overrides: Partial<ComponentProps<typeof CourtGrid>> = {}) {
     hours: [19, 20, 21],
     opening: [19, 20, 21],
     daily: [],
-    half: 0,
     now: new Date(2026, 10, 17, 20, 35),
     members: [],
     onBook: vi.fn(),
@@ -51,7 +50,7 @@ describe('indicador de hora actual en la cuadrícula', () => {
     expect(screen.queryByTestId('current-time-indicator')).not.toBeInTheDocument()
   })
 
-  it('conserva las acciones de reserva y detalle al cambiar de grupo de pistas', () => {
+  it('muestra las ocho pistas juntas y conserva las acciones de reserva y detalle', () => {
     const reservation = {
       id: 'current-reservation',
       memberId: 'alba',
@@ -61,17 +60,23 @@ describe('indicador de hora actual en la cuadrícula', () => {
       status: 'confirmed' as const,
       createdAt: new Date(2026, 10, 16).toISOString(),
     }
-    const { props, rerender } = renderGrid({ daily: [reservation] })
+    const { props } = renderGrid({ daily: [reservation] })
+    expect(screen.getByRole('region', { name: /Disponibilidad de las pistas/ })).toHaveAttribute(
+      'tabindex',
+      '0',
+    )
+    for (let court = 1; court <= 8; court++) {
+      expect(screen.getByRole('columnheader', { name: `Pista ${court}` })).toBeInTheDocument()
+    }
     const occupied = screen.getByRole('button', { name: 'Pista 1, 20:00: reserva de socio' })
     const past = screen.getByRole('button', { name: 'Pista 2, 20:00: franja pasada' })
     expect(past).toBeDisabled()
     fireEvent.click(occupied)
     expect(props.onDetail).toHaveBeenCalledWith(reservation)
-    rerender(<CourtGrid {...props} half={1} />)
     expect(screen.getAllByTestId('current-time-indicator')).toHaveLength(1)
-    const available = screen.getByRole('button', { name: 'Pista 5, 21:00: disponible' })
+    const available = screen.getByRole('button', { name: 'Pista 8, 21:00: disponible' })
     expect(available).toHaveTextContent('Libre')
     fireEvent.click(available)
-    expect(props.onBook).toHaveBeenCalledWith({ date: props.date, hour: 21, court: 5 })
+    expect(props.onBook).toHaveBeenCalledWith({ date: props.date, hour: 21, court: 8 })
   })
 })

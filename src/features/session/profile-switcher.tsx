@@ -47,7 +47,7 @@ export function AccountSelection({ onDone = () => {} }: { onDone?: () => void })
     <div className="grid gap-4">
       {mode === 'accounts' ? (
         <>
-          <div className="grid max-h-[48dvh] gap-2 overflow-y-auto">
+          <div className="grid max-h-[48dvh] auto-rows-max gap-2 overflow-y-auto">
             {[...profiles]
               .sort((a, b) => Number(b.role === 'admin') - Number(a.role === 'admin'))
               .map((profile, index) => (

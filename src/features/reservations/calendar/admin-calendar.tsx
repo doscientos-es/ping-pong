@@ -59,7 +59,6 @@ export function AdminCalendar({ onDetail }: { onDetail: (reservation: Reservatio
   const today = dateKey(now)
   const [date, setDate] = useState(today)
   const [filter, setFilter] = useState('all')
-  const [half, setHalf] = useState(0)
   const [booking, setBooking] = useState<BookingInput | 'new' | null>(null)
   const daily = view!.reservations.filter(
     (item) => item.date === date && item.status === 'confirmed',
@@ -144,15 +143,6 @@ export function AdminCalendar({ onDetail }: { onDetail: (reservation: Reservatio
         <SegmentedControl value={filter} options={filters} onChange={setFilter} />
         <span className="text-muted ml-auto text-xs">{available} huecos libres</span>
       </div>
-      <SegmentedControl
-        value={half}
-        options={[
-          { value: 0, label: 'Pistas 1 – 4' },
-          { value: 1, label: 'Pistas 5 – 8' },
-        ]}
-        onChange={setHalf}
-        className="desktop:hidden mb-3 flex [&>button]:flex-1"
-      />
       <div className="border-line overflow-hidden rounded-xl border bg-white">
         {hours.length ? (
           <CourtGrid
@@ -160,7 +150,6 @@ export function AdminCalendar({ onDetail }: { onDetail: (reservation: Reservatio
             hours={hours}
             opening={opening}
             daily={daily}
-            half={half}
             now={now}
             members={view!.members}
             onBook={setBooking}
