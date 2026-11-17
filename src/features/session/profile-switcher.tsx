@@ -55,7 +55,7 @@ export function AccountSelection({ onDone = () => {} }: { onDone?: () => void })
                   key={profile.id}
                   variant="secondary"
                   disabled={command.busy}
-                  className="justify-start gap-3 text-left"
+                  className="h-auto justify-start gap-3 py-2 text-left whitespace-normal"
                   onClick={() => {
                     if (profile.passwordRequired) setChosen(profile.id)
                     else void login(profile.id)

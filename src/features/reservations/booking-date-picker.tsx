@@ -73,7 +73,7 @@ export function BookingDatePicker({
               variant="ghost"
               key={day}
               ref={day === date ? selectedDay : undefined}
-              className="group border-line enabled:hover:border-green-mid disabled:bg-canvas disabled:text-muted aria-pressed:border-green aria-pressed:bg-green grid min-h-20 min-w-11 content-center justify-items-center gap-1 rounded-[10px] border px-0.5 py-2 disabled:opacity-60 aria-pressed:text-white"
+              className="group border-line enabled:hover:border-green-mid disabled:bg-canvas disabled:text-muted aria-pressed:border-green aria-pressed:bg-green grid h-auto min-h-20 min-w-11 content-center justify-items-center gap-1 rounded-[10px] border px-0.5 py-2 disabled:opacity-60 aria-pressed:text-white"
               aria-label={`${dateLabel(day)}, ${day < today ? 'pasado' : closed ? 'cerrado' : `${count} huecos libres`}`}
               aria-pressed={date === day}
               disabled={count === 0}

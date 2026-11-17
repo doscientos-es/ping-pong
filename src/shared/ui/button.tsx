@@ -35,7 +35,7 @@ export function Button({ variant = 'primary', className, tooltip, ...props }: Cl
     <ClubButton
       variant={uiVariant(variant)}
       className={cn(
-        'desktop:min-h-10 desktop:text-[13px] h-auto min-h-11 whitespace-normal',
+        'max-desktop:h-auto max-desktop:min-h-11 max-desktop:whitespace-normal',
         className,
       )}
       {...props}
@@ -67,7 +67,10 @@ export function ButtonLink({
       href={href}
       target={target}
       variant={variants[variant]}
-      className={cn('desktop:min-h-10 desktop:text-[13px] min-h-11 whitespace-normal', className)}
+      className={cn(
+        'max-desktop:h-auto max-desktop:min-h-11 max-desktop:whitespace-normal',
+        className,
+      )}
       onClick={(event) => {
         onClick?.(event)
         if (!event.defaultPrevented) navigate(event as MouseEvent<HTMLAnchorElement>)
@@ -81,10 +84,6 @@ export function ButtonLink({
 
 export function IconButton({ className, variant = 'ghost', ...props }: IconButtonProps) {
   return (
-    <ClubIconButton
-      variant={variant}
-      className={cn('desktop:size-9 size-11', className)}
-      {...props}
-    />
+    <ClubIconButton variant={variant} className={cn('max-desktop:size-11', className)} {...props} />
   )
 }

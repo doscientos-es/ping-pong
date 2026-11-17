@@ -7,9 +7,7 @@ export function PageHeading({ title, action }: { title: string; action?: ReactNo
         {title}
       </h1>
       {action && (
-        <div className="desktop:w-auto w-full [&>a]:min-h-11 [&>a]:w-full [&>button]:w-full">
-          {action}
-        </div>
+        <div className="desktop:w-auto w-full [&>a]:w-full [&>button]:w-full">{action}</div>
       )}
     </header>
   )

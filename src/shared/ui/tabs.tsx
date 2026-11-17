@@ -21,7 +21,7 @@ export function TabsList({
   return (
     <ClubTabsList
       className={cn(
-        'bg-canvas text-muted w-full min-w-0 max-w-full shrink-0 justify-start overflow-x-auto overscroll-x-contain p-1.5',
+        'w-full max-w-full min-w-0 shrink-0 justify-start overflow-x-auto overscroll-x-contain',
         className,
       )}
       {...props}
@@ -36,7 +36,7 @@ export function TabsTrigger({
   return (
     <ClubTabsTrigger
       className={cn(
-        'data-selected:bg-green-dark min-h-11 h-auto shrink-0 px-3 py-2 text-[13px] whitespace-nowrap data-selected:text-white data-focus-visible:outline-2 data-focus-visible:-outline-offset-2 data-focus-visible:outline-green-mid',
+        'max-desktop:h-auto max-desktop:min-h-11 max-desktop:py-2 data-focus-visible:outline-green-mid shrink-0 whitespace-nowrap data-focus-visible:outline-2 data-focus-visible:-outline-offset-2',
         className,
       )}
       {...props}

@@ -23,7 +23,7 @@ export function SegmentedControl<T extends string | number>({
           variant="ghost"
           key={option.value}
           aria-pressed={value === option.value}
-          className="text-muted aria-pressed:text-green desktop:min-h-8 inline-flex min-h-11 items-center justify-center gap-1 rounded-md px-2 py-1.5 text-xs whitespace-nowrap aria-pressed:bg-white aria-pressed:shadow-sm"
+          className="text-muted aria-pressed:text-green inline-flex items-center justify-center gap-1 rounded-md px-2 py-1.5 text-xs whitespace-nowrap aria-pressed:bg-white aria-pressed:shadow-sm"
           onClick={() => onChange(option.value)}
         >
           {option.label}

@@ -91,18 +91,11 @@ export function AdminCalendar({ onDetail }: { onDetail: (reservation: Reservatio
             aria-label="Acciones del calendario"
             className="flex items-center gap-2"
           >
-            <ButtonLink
-              to="/configuracion"
-              variant="secondary"
-              className="desktop:min-h-11 px-3 text-xs whitespace-nowrap"
-            >
+            <ButtonLink to="/configuracion" variant="secondary" className="whitespace-nowrap">
               <Settings2 size={16} />
               Editar horarios
             </ButtonLink>
-            <Button
-              className="desktop:min-h-11 px-3 text-xs whitespace-nowrap"
-              onClick={() => setBooking('new')}
-            >
+            <Button className="whitespace-nowrap" onClick={() => setBooking('new')}>
               <Plus size={17} />
               Nueva reserva
             </Button>
@@ -129,7 +122,7 @@ export function AdminCalendar({ onDetail }: { onDetail: (reservation: Reservatio
             aria-pressed={day === date}
             aria-label={dateLabel(day)}
             aria-current={day === today ? 'date' : undefined}
-            className="group text-muted aria-pressed:bg-green grid justify-items-center gap-1 rounded-lg px-1 py-2 aria-pressed:text-white"
+            className="group text-muted aria-pressed:bg-green grid h-auto justify-items-center gap-1 rounded-lg px-1 py-2 aria-pressed:text-white"
             onClick={() => setDate(day)}
           >
             <span className="text-xs capitalize">

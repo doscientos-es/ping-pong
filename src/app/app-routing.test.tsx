@@ -23,7 +23,7 @@ describe('composición y rutas por rol', () => {
       await screen.findByRole('button', { name: /Álex · Administración/ })
       expect(window.location.pathname).toBe('/login')
       expect(window.location.hash).toBe('')
-      expect(document.title).toBe('Iniciar sesión · Doscientos Club')
+      await waitFor(() => expect(document.title).toBe('Iniciar sesión · Doscientos Club'))
       expect(screen.queryByRole('navigation')).not.toBeInTheDocument()
       expect(screen.queryByLabelText('Ir a una fecha')).not.toBeInTheDocument()
     },

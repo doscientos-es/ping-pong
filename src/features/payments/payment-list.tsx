@@ -20,7 +20,7 @@ export function PaymentList({
       {payments.map((payment) => (
         <Button
           variant="ghost"
-          className="border-line hover:bg-canvas desktop:gap-4 desktop:px-6 desktop:py-5 flex w-full items-center gap-2.5 border-b px-4 py-4 text-left"
+          className="border-line hover:bg-canvas desktop:gap-4 desktop:px-6 desktop:py-5 flex h-auto w-full items-center gap-2.5 border-b px-4 py-4 text-left"
           key={payment.id}
           onClick={() => onSelect(payment)}
         >

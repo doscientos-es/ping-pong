@@ -21,7 +21,7 @@ export function ReservationCard({
     <Button
       variant="ghost"
       className={cn(
-        'grid w-full min-w-0 items-start justify-stretch justify-items-stretch gap-3 rounded-xl border p-3 text-left',
+        'grid h-auto w-full min-w-0 items-start justify-stretch justify-items-stretch gap-3 rounded-xl border p-3 text-left',
         upcoming ? reservationStateClasses.occupied : reservationStateClasses.inactive,
         upcoming
           ? 'enabled:hover:bg-green-mid enabled:hover:text-white'

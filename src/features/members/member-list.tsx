@@ -34,7 +34,7 @@ export function MemberList({
       {members.map((member, index) => (
         <Button
           variant="ghost"
-          className={`${row} border-line hover:bg-canvas w-full border-b text-left`}
+          className={`${row} border-line hover:bg-canvas h-auto w-full border-b text-left`}
           key={member.id}
           onClick={() => onEdit(member)}
         >

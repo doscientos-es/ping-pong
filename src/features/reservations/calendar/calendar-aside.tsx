@@ -21,7 +21,7 @@ function NextReservation({
       {reservation ? (
         <Button
           variant="ghost"
-          className="desktop:min-h-16 mt-2 min-h-16 w-full justify-between px-2 text-left"
+          className="mt-2 h-auto min-h-16 w-full justify-between px-2 text-left"
           aria-label="Ver próxima reserva"
           onClick={() => onDetail(reservation)}
         >

@@ -42,7 +42,7 @@ export function ClubSidebar({
       <div className="border-line mt-auto grid gap-2 border-t p-3">
         <Button
           variant="ghost"
-          className="text-muted desktop:min-h-11 w-full justify-start gap-3 rounded-xl px-3 py-2.5 text-xs"
+          className="text-muted w-full justify-start gap-3 rounded-xl px-3 text-xs"
           onClick={onHelp}
         >
           <CircleHelp size={18} aria-hidden="true" className="shrink-0" />
