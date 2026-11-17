@@ -74,8 +74,30 @@ automática ni se regeneran datos para aparentar pagos.
   conserva el comprobante y, si es del mes actual, bloquea acceso al socio.
 - Cambiar horarios o dar de baja a alguien no cancela sus reservas automáticamente.
   El calendario conserva reservas fuera del horario y permite reprogramarlas o cancelarlas.
+- Tras confirmar una reserva se puede descargar un archivo de calendario `.ics`.
+  Usa la zona horaria local del navegador, igual que las reservas de la demo; el
+  archivo descargado no se actualiza cuando la reserva se modifica o cancela.
 - Los documentos se consultan, descargan en HTML o imprimen/guardan como PDF
   mediante el diálogo del navegador. Son ficticios, **sin validez fiscal**.
+
+## Correo de confirmación preparado, no activado
+
+- `server/notifications/reservation-confirmation.ts` contiene un adaptador de Resend
+  para un futuro servidor: prepara el correo y adjunta una invitación iCalendar
+  `REQUEST` con destinatario, organizador, identificador estable y horas UTC.
+  No forma parte de la aplicación cliente ni expone un endpoint; actualmente no se
+  envían correos, aunque se configure una clave en el navegador.
+- Para activarlo hará falta un backend con autenticación y autorización reales,
+  persistencia compartida y una cola transaccional con reintentos y deduplicación.
+  El servidor deberá obtener la reserva y el correo del socio desde datos fiables,
+  no aceptar destinatarios o reservas arbitrarias del navegador. Debe guardar la
+  clave de Resend exclusivamente en el servidor y usar un remitente de dominio
+  verificado. La clave de idempotencia de Resend solo protege durante 24 horas.
+- La reserva deberá guardar la zona horaria del club y las fechas reales antes de
+  invocar el adaptador. También quedan pendientes las actualizaciones y cancelaciones
+  de invitaciones, la gestión de entregas fallidas y la comprobación con clientes de
+  correo/calendario. Resend aceptando el correo no garantiza su entrega y cada cliente
+  decide si añade automáticamente la cita o pide confirmación al destinatario.
 
 ## Filtros e historial
 

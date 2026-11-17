@@ -102,19 +102,46 @@ describe('navegación del club', () => {
     expect(within(profile).getByText('Administrador')).toBeInTheDocument()
     expect(within(sidebar).getByRole('button', { name: 'Instalar app' })).toBeInTheDocument()
     await user.click(profile)
-    const dialog = screen.getByRole('dialog', { name: 'Mi cuenta' })
-    expect(within(dialog).getByRole('link', { name: 'Ajustes de cuenta' })).toHaveAttribute(
-      'href',
-      '/cuenta',
-    )
-    await user.click(within(dialog).getByRole('button', { name: 'Cambiar perfil' }))
+    const menu = screen.getByRole('menu', { name: 'Menú de usuario de la barra lateral' })
+    expect(within(menu).getByRole('menuitem', { name: 'Ajustes de cuenta' })).toBeInTheDocument()
+    await user.click(within(menu).getByRole('menuitem', { name: 'Cambiar perfil' }))
     expect(onSwitchProfile).toHaveBeenCalledTimes(1)
     await user.click(profile)
     await user.click(
-      within(screen.getByRole('dialog', { name: 'Mi cuenta' })).getByRole('button', {
-        name: '¿Cómo funciona?',
-      }),
+      within(screen.getByRole('menu', { name: 'Menú de usuario de la barra lateral' })).getByRole(
+        'menuitem',
+        {
+          name: '¿Cómo funciona?',
+        },
+      ),
     )
     expect(onHelp).toHaveBeenCalledTimes(1)
+  })
+
+  it('abre y cierra el menú con teclado y devuelve el foco al botón', async () => {
+    const user = userEvent.setup()
+    render(
+      <MemoryRouter>
+        <ClubSidebar
+          navigation={navigationFor('member')}
+          onHelp={vi.fn()}
+          onSwitchProfile={vi.fn()}
+          mobileInstallTarget={null}
+        />
+      </MemoryRouter>,
+    )
+    const trigger = screen.getByRole('button', { name: 'Menú de usuario de la barra lateral' })
+    trigger.focus()
+    await user.keyboard('{Enter}')
+    const menu = await screen.findByRole('menu', { name: 'Menú de usuario de la barra lateral' })
+    expect(trigger).toHaveAttribute('aria-expanded', 'true')
+    expect(within(menu).getByRole('menuitem', { name: 'Ajustes de cuenta' })).toHaveFocus()
+    await user.keyboard('{ArrowDown}')
+    expect(within(menu).getByRole('menuitem', { name: 'Cambiar perfil' })).toHaveFocus()
+    await user.keyboard('{Escape}')
+    expect(
+      screen.queryByRole('menu', { name: 'Menú de usuario de la barra lateral' }),
+    ).not.toBeInTheDocument()
+    expect(trigger).toHaveFocus()
   })
 })

@@ -113,7 +113,7 @@ describe('módulos administrativos en pestañas con repositorio real', () => {
     })
     await user.click(screen.getByRole('tab', { name: 'Cuotas' }))
     expect(
-      within(screen.getByRole('tabpanel', { name: 'Cuotas' })).getAllByRole('group').length,
+      within(screen.getByRole('table', { name: 'Cuotas por socio' })).getAllByRole('row').length,
     ).toBeGreaterThan(0)
     expect(screen.queryByRole('combobox', { name: 'Estado del pago' })).not.toBeInTheDocument()
     await user.click(screen.getByRole('tab', { name: 'Comprobantes' }))

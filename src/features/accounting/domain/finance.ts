@@ -2,6 +2,8 @@ import type { Payment } from '../../club/domain/model'
 import { dateKey, isDate } from '../../club/domain/rules'
 import type { AccountingData, FinancialRow, LedgerInput } from './model'
 
+export { monthRange } from '../../../shared/report-period'
+
 export function parseMoney(text: string, signed = false): number {
   const value = text.trim().replace(',', '.')
   if (!(signed ? /^-?\d{1,8}(\.\d{1,2})?$/ : /^\d{1,8}(\.\d{1,2})?$/).test(value))
@@ -125,10 +127,4 @@ export function summarize(rows: FinancialRow[], from: string, to: string, openin
     pendingExpenses,
     subscriptions,
   }
-}
-
-export function monthRange(month: string) {
-  if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) throw new Error('Selecciona un mes válido.')
-  const [year, index] = month.split('-').map(Number)
-  return { from: `${month}-01`, to: dateKey(new Date(year, index, 0, 12)) }
 }

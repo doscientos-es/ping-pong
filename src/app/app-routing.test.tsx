@@ -12,22 +12,28 @@ beforeAll(async () => {
 })
 
 describe('composición y rutas por rol', () => {
-  it.each(['/', '/login', '/reservas', '/pagos', '/cuenta', '/configuracion', '/desconocida'])(
-    'muestra la selección solo en /login al abrir %s sin perfil',
-    async (route) => {
-      const { gateway } = clubFixture()
-      localStorage.removeItem('spin-club:profile')
-      window.history.replaceState(null, '', route)
-      render(<App gateway={gateway} />)
+  it.each([
+    '/',
+    '/login',
+    '/reservas',
+    '/pagos',
+    '/cuenta',
+    '/configuracion',
+    '/socios/alba',
+    '/desconocida',
+  ])('muestra la selección solo en /login al abrir %s sin perfil', async (route) => {
+    const { gateway } = clubFixture()
+    localStorage.removeItem('spin-club:profile')
+    window.history.replaceState(null, '', route)
+    render(<App gateway={gateway} />)
 
-      await screen.findByRole('button', { name: /Álex · Administración/ })
-      expect(window.location.pathname).toBe('/login')
-      expect(window.location.hash).toBe('')
-      await waitFor(() => expect(document.title).toBe('Iniciar sesión · Doscientos Club'))
-      expect(screen.queryByRole('navigation')).not.toBeInTheDocument()
-      expect(screen.queryByLabelText('Ir a una fecha')).not.toBeInTheDocument()
-    },
-  )
+    await screen.findByRole('button', { name: /Álex · Administración/ })
+    expect(window.location.pathname).toBe('/login')
+    expect(window.location.hash).toBe('')
+    await waitFor(() => expect(document.title).toBe('Iniciar sesión · Doscientos Club'))
+    expect(screen.queryByRole('navigation')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Ir a una fecha')).not.toBeInTheDocument()
+  })
 
   it('redirige al calendario si se abre /login con una sesión válida', async () => {
     const { gateway } = clubFixture()
@@ -58,7 +64,7 @@ describe('composición y rutas por rol', () => {
     expect(screen.queryByRole('navigation')).not.toBeInTheDocument()
   })
 
-  it.each(['/socios', '/configuracion', '/contabilidad'])(
+  it.each(['/socios', '/socios/alba', '/configuracion', '/contabilidad'])(
     'redirige a un socio que abre %s directamente',
     async (route) => {
       const { gateway } = clubFixture()

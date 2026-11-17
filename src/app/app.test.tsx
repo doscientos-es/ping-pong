@@ -14,7 +14,7 @@ beforeAll(async () => {
 
 async function switchTo(user: ReturnType<typeof userEvent.setup>, name: RegExp) {
   await user.click(screen.getByRole('button', { name: 'Menú de usuario' }))
-  await user.click(screen.getByRole('button', { name: 'Cambiar perfil' }))
+  await user.click(screen.getByRole('menuitem', { name: 'Cambiar perfil' }))
   const dialog = await screen.findByRole('dialog', { name: 'Cambiar perfil' })
   expect(dialog).not.toHaveAttribute('aria-describedby')
   await user.click(within(dialog).getByRole('button', { name }))
@@ -29,20 +29,20 @@ describe('flujos reales con localStorage, sin backend', () => {
     await screen.findByLabelText('Ir a una fecha')
     const menu = screen.getByRole('button', { name: 'Menú de usuario de la barra lateral' })
     await user.click(menu)
-    const account = screen.getByRole('dialog', { name: 'Mi cuenta' })
-    expect(within(account).getByRole('link', { name: 'Ajustes de cuenta' })).toHaveAttribute(
-      'href',
-      '/cuenta',
-    )
-    await user.click(within(account).getByRole('button', { name: 'Cambiar perfil' }))
+    const account = screen.getByRole('menu', { name: 'Menú de usuario de la barra lateral' })
+    expect(within(account).getByRole('menuitem', { name: 'Ajustes de cuenta' })).toBeInTheDocument()
+    await user.click(within(account).getByRole('menuitem', { name: 'Cambiar perfil' }))
     const profiles = await screen.findByRole('dialog', { name: 'Cambiar perfil' })
     await user.click(within(profiles).getByRole('button', { name: /Álex · Administración/ }))
     await screen.findByRole('heading', { name: 'Calendario del club' })
     await user.click(screen.getByRole('button', { name: 'Menú de usuario de la barra lateral' }))
     await user.click(
-      within(screen.getByRole('dialog', { name: 'Mi cuenta' })).getByRole('button', {
-        name: 'Cerrar sesión',
-      }),
+      within(screen.getByRole('menu', { name: 'Menú de usuario de la barra lateral' })).getByRole(
+        'menuitem',
+        {
+          name: 'Cerrar sesión',
+        },
+      ),
     )
     await screen.findByRole('button', { name: 'Crear cuenta local' })
     expect(window.location.pathname).toBe('/login')
@@ -122,7 +122,7 @@ describe('flujos reales con localStorage, sin backend', () => {
     render(<App gateway={gateway} />)
     await screen.findByLabelText('Ir a una fecha')
     await user.click(screen.getByRole('button', { name: 'Menú de usuario' }))
-    await user.click(screen.getByRole('button', { name: 'Cambiar perfil' }))
+    await user.click(screen.getByRole('menuitem', { name: 'Cambiar perfil' }))
     const dialog = await screen.findByRole('dialog', { name: 'Cambiar perfil' })
     await user.click(within(dialog).getByRole('button', { name: /Elena Soler/ }))
     expect(await screen.findByRole('alert')).toHaveTextContent('desactivada')
@@ -137,7 +137,7 @@ describe('flujos reales con localStorage, sin backend', () => {
     render(<App gateway={gateway} />)
     await screen.findByLabelText('Ir a una fecha')
     await user.click(screen.getByRole('button', { name: 'Menú de usuario' }))
-    await user.click(screen.getByRole('button', { name: 'Cambiar perfil' }))
+    await user.click(screen.getByRole('menuitem', { name: 'Cambiar perfil' }))
     await user.click(screen.getByRole('button', { name: 'Crear cuenta local' }))
     const dialog = await screen.findByRole('dialog', { name: 'Cambiar perfil' })
     expect(dialog).not.toHaveAttribute('aria-describedby')
@@ -182,7 +182,7 @@ describe('flujos reales con localStorage, sin backend', () => {
     const user = userEvent.setup()
     render(<App gateway={gateway} />)
     await screen.findByRole('heading', { name: 'Control de suscripciones' })
-    const row = screen.getByRole('group', { name: 'Cuota de Hugo Molina' })
+    const row = screen.getByRole('row', { name: /Hugo Molina/ })
     await user.click(within(row).getByRole('button', { name: 'Registrar pago' }))
     let dialog = await screen.findByRole('dialog', { name: 'Registrar cuota pagada' })
     expect(dialog).not.toHaveAttribute('aria-describedby')

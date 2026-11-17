@@ -1,10 +1,9 @@
-import { ArrowUpRight, CalendarDays, Clock3 } from 'lucide-react'
+import { ArrowUpRight, Clock3 } from 'lucide-react'
 
 import { cn } from '../../shared/cn'
 import { dateLabel, hourLabel } from '../../shared/format'
 import { Badge, Button } from '../../shared/ui'
 import type { Reservation } from '../club/domain/model'
-import { reservationStateClasses } from './reservation-styles'
 
 export function ReservationCard({
   reservation,
@@ -16,40 +15,37 @@ export function ReservationCard({
   onClick: () => void
 }) {
   const cancelled = reservation.status === 'cancelled'
-  const upcoming = !cancelled && !history
   return (
     <Button
       variant="ghost"
       className={cn(
-        'grid h-auto w-full min-w-0 items-start justify-stretch justify-items-stretch gap-3 rounded-xl border p-3 text-left',
-        upcoming ? reservationStateClasses.occupied : reservationStateClasses.inactive,
-        upcoming
-          ? 'enabled:hover:bg-green-mid enabled:hover:text-white'
-          : 'enabled:hover:border-green-mid enabled:hover:bg-accent-soft enabled:hover:text-green',
+        'border-line enabled:hover:border-green-mid enabled:hover:bg-accent-soft relative grid h-auto w-full min-w-0 items-start justify-stretch justify-items-stretch gap-2 overflow-hidden rounded-xl border p-3 text-left',
+        history ? 'bg-canvas' : 'bg-white',
         cancelled && 'border-dashed',
       )}
       onClick={onClick}
     >
-      <div className="flex items-center gap-2">
+      <span
+        aria-hidden="true"
+        className="text-green pointer-events-none absolute right-3 bottom-0 text-6xl leading-none font-bold opacity-[0.06]"
+      >
+        {reservation.court}
+      </span>
+      <div className="relative flex items-center gap-2">
         <h3 className="mr-auto min-w-0 text-sm">Pista {reservation.court}</h3>
-        <Badge className={cn('shrink-0', upcoming ? 'bg-lime text-green' : 'text-muted bg-white')}>
+        <Badge tone={cancelled || history ? 'gray' : 'green'} className="shrink-0">
           {cancelled ? 'Cancelada' : history ? 'Jugada' : 'Confirmada'}
         </Badge>
-        <ArrowUpRight size={17} className={cn('shrink-0', upcoming ? 'text-lime' : 'text-muted')} />
+        <ArrowUpRight size={17} className="text-muted shrink-0" aria-hidden="true" />
       </div>
-      <div className="grid gap-1.5">
-        <p className="flex items-start gap-2 text-[13px] leading-5">
-          <CalendarDays size={16} className="mt-0.5 shrink-0" />
-          <span>
-            {dateLabel(reservation.date, { weekday: 'short', day: 'numeric', month: 'long' })}
-          </span>
-        </p>
-        <p className="flex items-center gap-2 text-sm font-semibold tabular-nums">
-          <Clock3 size={16} className="shrink-0" />
-          <span>
-            {hourLabel(reservation.hour)} – {hourLabel(reservation.hour + 1)}
-          </span>
-        </p>
+      <div className="relative flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] leading-5">
+        <span>
+          {dateLabel(reservation.date, { weekday: 'short', day: 'numeric', month: 'long' })}
+        </span>
+        <span className="flex items-center gap-1 font-semibold tabular-nums">
+          <Clock3 size={14} aria-hidden="true" />
+          {hourLabel(reservation.hour)} – {hourLabel(reservation.hour + 1)}
+        </span>
       </div>
     </Button>
   )

@@ -1,8 +1,9 @@
 import { ArrowUpRight } from 'lucide-react'
 import { useMemo } from 'react'
+import { Link } from 'react-router-dom'
 
 import { initials } from '../../shared/format'
-import { Avatar, Badge, Button } from '../../shared/ui'
+import { Avatar, Badge } from '../../shared/ui'
 import type { Member, Reservation } from '../club/domain/model'
 
 const row =
@@ -11,11 +12,9 @@ const row =
 export function MemberList({
   members,
   reservations,
-  onEdit,
 }: {
   members: Member[]
   reservations: Reservation[]
-  onEdit: (member: Member) => void
 }) {
   const reservationCounts = useMemo(() => {
     const counts = new Map<string, number>()
@@ -32,11 +31,10 @@ export function MemberList({
         <span />
       </div>
       {members.map((member, index) => (
-        <Button
-          variant="ghost"
-          className={`${row} border-line hover:bg-canvas h-auto w-full border-b text-left`}
+        <Link
+          className={`${row} border-line hover:bg-canvas w-full border-b text-left`}
           key={member.id}
-          onClick={() => onEdit(member)}
+          to={`/socios/${encodeURIComponent(member.id)}`}
         >
           <span className="flex min-w-0 items-center gap-2">
             <Avatar index={index}>{initials(member.name)}</Avatar>
@@ -60,7 +58,7 @@ export function MemberList({
             {reservationCounts.get(member.id) ?? 0}
           </span>
           <ArrowUpRight size={18} className="text-muted" />
-        </Button>
+        </Link>
       ))}
     </div>
   )

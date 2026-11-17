@@ -59,7 +59,6 @@ export function CalendarAside({
   now: Date
   onDetail: (reservation: Reservation) => void
 }) {
-  const admin = view.actor.role === 'admin'
   const plan = requirePlan(view.settings, view.actor.planId)
   const next = view.reservations
     .filter(
@@ -74,7 +73,7 @@ export function CalendarAside({
       aria-label="Información del club"
       className="desktop:max-wide:grid-cols-2 wide:grid-cols-1 grid gap-3"
     >
-      {!admin && <NextReservation reservation={next} onDetail={onDetail} />}
+      <NextReservation reservation={next} onDetail={onDetail} />
       <section className="border-line bg-accent-soft desktop:block hidden rounded-xl border p-4">
         <h2 className="text-sm">Cuota mensual</h2>
         <p className="text-muted mt-1 text-xs">{plan.name}</p>

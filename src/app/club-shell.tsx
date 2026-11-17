@@ -24,7 +24,9 @@ export function ClubShell() {
   const title =
     pathname === '/cuenta'
       ? 'Mi cuenta'
-      : (navigation.find((item) => item.to === pathname)?.label ?? CLUB_NAME)
+      : pathname.startsWith('/socios/') && actor?.role === 'admin'
+        ? 'Ficha del socio'
+        : (navigation.find((item) => item.to === pathname)?.label ?? CLUB_NAME)
   const openProfiles = () => setDialog('profiles')
   const openHelp = () => setDialog('help')
   const closeDialog = () => setDialog(null)
@@ -74,7 +76,11 @@ export function ClubShell() {
       </div>
       <ClubNavigation items={navigation} mobile />
       <ProfileSwitcher open={dialog === 'profiles'} onClose={closeDialog} />
-      <DemoHelpDialog open={dialog === 'help'} onClose={closeDialog} />
+      <DemoHelpDialog
+        open={dialog === 'help'}
+        onClose={closeDialog}
+        role={actor?.role ?? 'member'}
+      />
     </div>
   )
 }

@@ -68,7 +68,7 @@ describe('catálogo de cuotas y selección en altas con repositorio real', () =>
       (item) => item.email === 'flexible@doscientos.example',
     )!
     expect(member.planId).toBe(plans[1].id)
-    await user.click(screen.getByRole('button', { name: /Socio flexible/ }))
+    await user.click(screen.getByRole('link', { name: /Socio flexible/ }))
     expect(screen.getByLabelText('Cuota del club')).toHaveValue(plans[1].id)
   })
 

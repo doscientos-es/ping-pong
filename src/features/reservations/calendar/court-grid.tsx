@@ -8,6 +8,11 @@ import { COURTS, type BookingInput, type Member, type Reservation } from '../../
 import { dateKey, startTime } from '../../club/domain/rules'
 import { reservationStateClasses } from '../reservation-styles'
 
+export const calendarSlotClasses = {
+  available: 'border-[#dbe5d5] bg-[#f9fbf7] text-green-mid',
+  occupied: 'border-[#bcd4c4] bg-[#dfebe4] text-green',
+} as const
+
 export function CourtGrid({
   date,
   hours,
@@ -91,13 +96,13 @@ export function CourtGrid({
                           'flex h-11 w-full items-center justify-center gap-1 rounded-md border px-0.5 py-0 text-xs whitespace-nowrap disabled:opacity-100',
                           reservation
                             ? cn(
-                                reservationStateClasses.occupied,
-                                'enabled:hover:bg-green-mid enabled:hover:text-white',
+                                calendarSlotClasses.occupied,
+                                'enabled:hover:text-green enabled:hover:bg-[#d0e2d7]',
                               )
                             : past || closed
                               ? reservationStateClasses.inactive
                               : cn(
-                                  reservationStateClasses.available,
+                                  calendarSlotClasses.available,
                                   'enabled:hover:bg-accent-soft enabled:hover:text-green border-dashed',
                                 ),
                         )}

@@ -20,7 +20,6 @@ import {
   TabsList,
   TabsTrigger,
 } from '../../shared/ui'
-import type { Member } from '../club/domain/model'
 import { hasSubscription } from '../club/domain/rules'
 import { InvitationDialog } from '../session/invitation-dialog'
 import { RolesPanel } from '../session/roles-panel'
@@ -32,7 +31,7 @@ export function MembersPage() {
   const now = useClubClock()
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('all')
-  const [editing, setEditing] = useState<Member | 'new' | null>(null)
+  const [creating, setCreating] = useState(false)
   const [inviting, setInviting] = useState(false)
   const all = view!.members.filter((member) => member.role === 'member')
   const members = all.filter(
@@ -54,7 +53,7 @@ export function MembersPage() {
             <Button variant="secondary" onClick={() => setInviting(true)}>
               Invitar usuario
             </Button>
-            <Button onClick={() => setEditing('new')}>
+            <Button onClick={() => setCreating(true)}>
               <Plus size={18} />
               Nuevo socio
             </Button>
@@ -104,7 +103,7 @@ export function MembersPage() {
               </select>
             </ListToolbar>
             {members.length ? (
-              <MemberList members={members} reservations={view!.reservations} onEdit={setEditing} />
+              <MemberList members={members} reservations={view!.reservations} />
             ) : (
               <Empty icon={UserRound} title="No hay socios con estos filtros">
                 Prueba con otro nombre o cambia el filtro de estado.
@@ -120,12 +119,7 @@ export function MembersPage() {
           <RolesPanel />
         </TabsContent>
       </Tabs>
-      {editing && (
-        <MemberEditor
-          member={editing === 'new' ? undefined : editing}
-          onClose={() => setEditing(null)}
-        />
-      )}
+      {creating && <MemberEditor onClose={() => setCreating(false)} />}
       {inviting && <InvitationDialog onClose={() => setInviting(false)} />}
     </>
   )

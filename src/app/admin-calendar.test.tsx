@@ -18,6 +18,23 @@ async function renderAdminCalendar() {
 }
 
 describe('cabecera del calendario de administración', () => {
+  it('no muestra la cuota del socio en el calendario de administración', async () => {
+    await renderAdminCalendar()
+    expect(screen.getByRole('table', { name: /Disponibilidad/ })).toBeInTheDocument()
+    expect(
+      screen.queryByRole('complementary', { name: 'Información del club' }),
+    ).not.toBeInTheDocument()
+    expect(screen.queryByText('Reservas ilimitadas incluidas.')).not.toBeInTheDocument()
+  })
+
+  it('mantiene la información de cuota para los socios', async () => {
+    const { gateway } = clubFixture()
+    render(<App gateway={gateway} />)
+    const information = await screen.findByRole('complementary', { name: 'Información del club' })
+    expect(within(information).getByText('Cuota general')).toBeInTheDocument()
+    expect(within(information).getByText('Reservas ilimitadas incluidas.')).toBeInTheDocument()
+  })
+
   it('presenta un único título y agrupa las acciones sin la descripción anterior', async () => {
     await renderAdminCalendar()
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)

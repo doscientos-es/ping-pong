@@ -78,17 +78,21 @@ describe('configuración y formularios fiscales con repositorio local real', () 
       dni: '12345678Z',
       address: 'Calle Socio 2, 28001 Madrid, España',
     })
-    await user.click(screen.getByRole('button', { name: /Socio de Prueba Fiscal/ }))
+    await user.click(screen.getByRole('link', { name: /Socio de Prueba Fiscal/ }))
+    expect(window.location.pathname).toBe(`/socios/${member.id}`)
     expect(screen.getByLabelText('DNI / NIE')).toHaveValue('12345678Z')
     expect(screen.getByLabelText('Dirección postal')).toHaveValue(
       'Calle Socio 2, 28001 Madrid, España',
     )
     fireEvent.change(screen.getByLabelText('Dirección postal'), { target: { value: 'Otra calle' } })
     await user.click(screen.getByRole('button', { name: 'Guardar cambios' }))
-    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
-    expect((await repository.read()).members.find((item) => item.id === member.id)).toMatchObject({
-      dni: '12345678Z',
-      address: 'Otra calle',
-    })
+    await waitFor(async () =>
+      expect((await repository.read()).members.find((item) => item.id === member.id)).toMatchObject(
+        {
+          dni: '12345678Z',
+          address: 'Otra calle',
+        },
+      ),
+    )
   })
 })

@@ -1,32 +1,61 @@
 import { Modal } from '../../shared/ui'
+import type { Profile } from '../club/domain/model'
 
-const steps = [
+const memberSteps = [
   {
-    title: 'Perfiles',
+    title: 'Reservar pista',
     description:
-      'Cambia de perfil desde tu avatar. Prueba socios con cuota al día, Hugo con cuota pendiente o administración.',
+      'Elige día, hora y pista disponible. Necesitas tener activa la cuota del mes de la reserva.',
   },
   {
-    title: 'Cuota mensual',
+    title: 'Mis reservas e historial',
     description:
-      'La suscripción mensual al club incluye todas las reservas que quieras, según disponibilidad. Actívala con un pago simulado.',
+      'Consulta tus próximas reservas, cancélalas antes de que empiecen y revisa tus partidas anteriores.',
   },
   {
-    title: 'Reservas',
+    title: 'Mis pagos',
     description:
-      'Elige día, hora y pista libre y confirma tu reserva, sin pagar nada más. Puedes cancelar antes de empezar.',
-  },
-  {
-    title: 'Administración',
-    description:
-      'Como administrador, cambia horarios y cuota, gestiona socios y registra pagos por periodo.',
+      'Consulta tus cuotas y comprobantes. La cuota incluye reservas ilimitadas según disponibilidad.',
   },
 ]
 
-export function DemoHelpDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+const adminSteps = [
+  {
+    title: 'Actividad del club',
+    description: 'Analiza las reservas por día, hora, pista y socio para identificar la demanda.',
+  },
+  {
+    title: 'Calendario del club',
+    description: 'Consulta la disponibilidad y gestiona las reservas de los socios.',
+  },
+  {
+    title: 'Gestión de socios',
+    description: 'Da de alta socios, consulta sus fichas y administra accesos y roles.',
+  },
+  {
+    title: 'Pagos y contabilidad',
+    description:
+      'Registra cuotas por periodo, consulta comprobantes y revisa los movimientos y resúmenes contables.',
+  },
+  {
+    title: 'Configuración',
+    description: 'Gestiona horarios, cierres, cuotas y datos fiscales del club.',
+  },
+]
+
+export function DemoHelpDialog({
+  open,
+  onClose,
+  role,
+}: {
+  open: boolean
+  onClose: () => void
+  role: Profile['role']
+}) {
+  const steps = role === 'admin' ? adminSteps : memberSteps
   return (
-    <Modal open={open} onClose={onClose} title="Ayuda de la demo">
-      <ol className="mb-6 grid list-none gap-6 p-0">
+    <Modal open={open} onClose={onClose} title="Cómo funciona">
+      <ol className="mb-5 grid list-none gap-4 p-0">
         {steps.map(({ title, description }, index) => (
           <li key={title} className="flex items-start gap-4">
             <span className="bg-accent-soft text-green-mid rounded-lg p-2.5 text-[13px] font-semibold">
@@ -34,14 +63,17 @@ export function DemoHelpDialog({ open, onClose }: { open: boolean; onClose: () =
             </span>
             <div>
               <h3 className="text-sm">{title}</h3>
-              <p className="text-muted mt-2 text-sm">{description}</p>
+              <p className="text-muted mt-1 text-sm">{description}</p>
             </div>
           </li>
         ))}
       </ol>
+      <p className="text-muted mb-4 text-sm">
+        Desde el menú de usuario puedes cambiar de perfil, gestionar tu contraseña y cerrar sesión.
+      </p>
       <p className="border-line bg-accent-soft text-muted rounded-lg border p-3.5 text-[13px] leading-relaxed">
-        Datos y contraseñas locales solo en este navegador. Sin seguridad de servidor ni cobros
-        reales. No introduzcas datos personales reales.
+        Los datos y contraseñas se guardan solo en este navegador; no hay seguridad de servidor ni
+        cobros reales. No introduzcas datos personales reales.
       </p>
     </Modal>
   )

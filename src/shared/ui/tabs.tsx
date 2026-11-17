@@ -21,7 +21,7 @@ export function TabsList({
   return (
     <ClubTabsList
       className={cn(
-        'w-full max-w-full min-w-0 shrink-0 justify-start overflow-x-auto overscroll-x-contain',
+        'max-w-full min-w-0 shrink-0 justify-start overflow-x-auto overscroll-x-contain',
         className,
       )}
       {...props}

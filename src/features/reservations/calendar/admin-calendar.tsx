@@ -1,4 +1,4 @@
-import { CalendarDays, Check, Clock3, Moon, Plus, Settings2, Sun, Sunset } from 'lucide-react'
+import { CalendarDays, Check, Plus, Settings2 } from 'lucide-react'
 import { useState } from 'react'
 
 import { useClubClock } from '../../../app/club-clock'
@@ -6,75 +6,23 @@ import { useClub } from '../../../app/club-context'
 import { cn } from '../../../shared/cn'
 import { dateLabel } from '../../../shared/format'
 import { Button, ButtonLink, Empty, PageHeading } from '../../../shared/ui'
-import { SegmentedControl } from '../../../shared/ui/segmented-control'
 import type { BookingInput, Reservation } from '../../club/domain/model'
 import { addDays, dateKey, hoursFor, startTime } from '../../club/domain/rules'
 import { BookingDialog } from '../booking-dialog'
-import { reservationStateClasses } from '../reservation-styles'
-import { CourtGrid } from './court-grid'
+import { calendarSlotClasses, CourtGrid } from './court-grid'
 import { DateToolbar } from './date-toolbar'
-
-const filters = [
-  {
-    value: 'all',
-    label: (
-      <>
-        <Clock3 size={14} />
-        Todo el día
-      </>
-    ),
-  },
-  {
-    value: 'morning',
-    label: (
-      <>
-        <Sun size={14} />
-        Mañana
-      </>
-    ),
-  },
-  {
-    value: 'afternoon',
-    label: (
-      <>
-        <Sunset size={14} />
-        Tarde
-      </>
-    ),
-  },
-  {
-    value: 'evening',
-    label: (
-      <>
-        <Moon size={14} />
-        Noche
-      </>
-    ),
-  },
-]
 
 export function AdminCalendar({ onDetail }: { onDetail: (reservation: Reservation) => void }) {
   const { view } = useClub()
   const now = useClubClock()
   const today = dateKey(now)
   const [date, setDate] = useState(today)
-  const [filter, setFilter] = useState('all')
   const [booking, setBooking] = useState<BookingInput | 'new' | null>(null)
   const daily = view!.reservations.filter(
     (item) => item.date === date && item.status === 'confirmed',
   )
   const opening = hoursFor(view!.settings, date)
-  const hours = [...new Set([...opening, ...daily.map((item) => item.hour)])]
-    .sort((a, b) => a - b)
-    .filter(
-      (hour) =>
-        filter === 'all' ||
-        (filter === 'morning'
-          ? hour < 14
-          : filter === 'afternoon'
-            ? hour >= 14 && hour < 18
-            : hour >= 18),
-    )
+  const hours = [...new Set([...opening, ...daily.map((item) => item.hour)])].sort((a, b) => a - b)
   const available = opening
     .filter((hour) => startTime(date, hour) > now.getTime())
     .reduce((total, hour) => total + 8 - daily.filter((item) => item.hour === hour).length, 0)
@@ -139,10 +87,6 @@ export function AdminCalendar({ onDetail }: { onDetail: (reservation: Reservatio
           </Button>
         ))}
       </div>
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-3">
-        <SegmentedControl value={filter} options={filters} onChange={setFilter} />
-        <span className="text-muted ml-auto text-xs">{available} huecos libres</span>
-      </div>
       <div className="border-line overflow-hidden rounded-xl border bg-white">
         {hours.length ? (
           <CourtGrid
@@ -156,13 +100,8 @@ export function AdminCalendar({ onDetail }: { onDetail: (reservation: Reservatio
             onDetail={onDetail}
           />
         ) : (
-          <Empty
-            icon={CalendarDays}
-            title={opening.length ? 'Sin franjas en este tramo' : 'Club cerrado'}
-          >
-            {opening.length
-              ? 'Prueba con otro momento del día.'
-              : 'El club está cerrado en esta fecha. Elige otro día para jugar.'}
+          <Empty icon={CalendarDays} title="Club cerrado">
+            El club está cerrado en esta fecha. Elige otro día para jugar.
           </Empty>
         )}
         <div className="border-line text-muted flex flex-wrap items-center gap-4 border-t px-4 py-4 text-xs">
@@ -171,7 +110,7 @@ export function AdminCalendar({ onDetail }: { onDetail: (reservation: Reservatio
               aria-hidden="true"
               className={cn(
                 'grid size-5 place-items-center rounded border border-dashed',
-                reservationStateClasses.available,
+                calendarSlotClasses.available,
               )}
             >
               <Plus size={12} />
@@ -183,14 +122,15 @@ export function AdminCalendar({ onDetail }: { onDetail: (reservation: Reservatio
               aria-hidden="true"
               className={cn(
                 'grid size-5 place-items-center rounded border',
-                reservationStateClasses.occupied,
+                calendarSlotClasses.occupied,
               )}
             >
               <Check size={12} />
             </span>
             Ocupada
           </span>
-          <span className="desktop:inline ml-auto hidden">Hora local del dispositivo</span>
+          <span className="ml-auto font-medium">{available} huecos libres</span>
+          <span className="desktop:inline hidden">Hora local del dispositivo</span>
         </div>
         {!navigator.locks && (
           <p className="text-muted px-5 pb-4 text-xs leading-relaxed">

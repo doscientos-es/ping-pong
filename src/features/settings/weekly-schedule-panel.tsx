@@ -29,10 +29,8 @@ export function WeeklySchedulePanel({
             Horarios de apertura
           </>
         }
+        action={<CopyScheduleDialog weekly={weekly} onApply={copy} />}
       />
-      <div className="max-desktop:[&>.button]:w-full desktop:px-6 flex flex-wrap items-center justify-between gap-3 px-4 pb-4">
-        <CopyScheduleDialog weekly={weekly} onApply={copy} />
-      </div>
       <div className="desktop:px-6 px-4">
         {[1, 2, 3, 4, 5, 6, 0].map((day) => (
           <OpeningDayEditor

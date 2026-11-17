@@ -1,4 +1,4 @@
-import { ArrowUpRight, CalendarDays, History, Trophy, Ban } from 'lucide-react'
+import { ArrowUpRight, CalendarDays, History, SlidersHorizontal, Ban } from 'lucide-react'
 import { useId, useMemo, useState } from 'react'
 
 import { useClubClock } from '../../app/club-clock'
@@ -10,14 +10,9 @@ import {
   ButtonLink,
   DateRangeFields,
   Empty,
-  ListToolbar,
-  PageHeading,
   Pagination,
   Panel,
-  SectionHeading,
   SegmentedControl,
-  Stat,
-  StatsGrid,
 } from '../../shared/ui'
 import { usePagination } from '../../shared/use-pagination'
 import { COURTS, type Reservation } from '../club/domain/model'
@@ -32,7 +27,9 @@ export function MyReservationsPage({ history = false }: { history?: boolean }) {
   const [detail, setDetail] = useState<Reservation | null>(null)
   const [court, setCourt] = useState('all')
   const [range, setRange] = useState(emptyDateRange)
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const resultsId = useId()
+  const filtersId = useId()
   const { actor, reservations } = view!
   const { upcoming, past, cancelled } = useMemo(() => {
     const groups = {
@@ -63,33 +60,63 @@ export function MyReservationsPage({ history = false }: { history?: boolean }) {
     [list, court, range],
   )
   const pagination = usePagination(filtered, JSON.stringify([actor.id, history, tab, court, range]))
-  const hasFilters = court !== 'all' || Boolean(range.from || range.to)
+  const activeFilterCount = Number(court !== 'all') + Number(Boolean(range.from || range.to))
+  const hasFilters = activeFilterCount > 0
   const playedThisMonth = past.filter((item) =>
     item.date.startsWith(dateKey(now).slice(0, 7)),
   ).length
 
   return (
     <>
-      <PageHeading
-        title={history ? 'Historial de partidas' : 'Mis reservas'}
-        action={
-          <ButtonLink to="/">
+      <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <h1 className="desktop:text-xl min-w-0 text-lg font-semibold tracking-tight">
+          {history ? 'Historial de partidas' : 'Mis reservas'}
+        </h1>
+        {!history && (
+          <ButtonLink to="/" size="sm">
             <CalendarDays size={17} />
             Reservar pista
           </ButtonLink>
-        }
-      />
-      <StatsGrid>
-        <Stat label="Próximas" value={upcoming.length} icon={CalendarDays} />
-        <Stat label="Jugadas" value={past.length} icon={History} />
-        <Stat label="Horas este mes" value={playedThisMonth} icon={Trophy} />
-      </StatsGrid>
+        )}
+      </header>
+      <div className="desktop:mb-4 mb-3 grid grid-cols-3 gap-2">
+        {(history
+          ? [
+              { label: 'Partidas jugadas', value: past.length },
+              { label: 'Horas este mes', value: playedThisMonth },
+              { label: 'Próximas', value: upcoming.length },
+            ]
+          : [
+              { label: 'Próximas', value: upcoming.length },
+              { label: 'Canceladas', value: cancelled.length },
+              { label: 'Partidas jugadas', value: past.length },
+            ]
+        ).map((stat) => (
+          <div
+            key={stat.label}
+            className="border-line min-w-0 rounded-xl border bg-white px-3 py-2"
+          >
+            <strong className="font-heading block text-lg leading-6 tabular-nums">
+              {stat.value}
+            </strong>
+            <span className="text-muted block text-xs leading-4">{stat.label}</span>
+          </div>
+        ))}
+      </div>
       <Panel>
-        <SectionHeading
-          title={history ? 'Partidas pasadas' : 'Reservas'}
-          action={
-            !history && (
+        <div className="desktop:px-4 flex flex-wrap items-center justify-between gap-2 px-3 py-3">
+          <div className="min-w-0">
+            <h2 className="text-sm font-semibold">
+              {history ? 'Partidas pasadas' : 'Tus reservas'}
+            </h2>
+            <p className="text-muted text-xs">
+              {filtered.length} {filtered.length === 1 ? 'resultado' : 'resultados'}
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5">
+            {!history && (
               <SegmentedControl
+                className="w-fit max-w-full p-0.5"
                 value={tab}
                 onChange={setTab}
                 options={[
@@ -97,11 +124,31 @@ export function MyReservationsPage({ history = false }: { history?: boolean }) {
                   { value: 'cancelled', label: `Canceladas (${cancelled.length})` },
                 ]}
               />
-            )
-          }
-        />
-        <ListToolbar>
-          <div className="desktop:flex grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] items-end gap-3 pb-1 [&>fieldset]:col-span-2">
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              aria-expanded={filtersOpen}
+              aria-controls={filtersId}
+              onClick={() => setFiltersOpen((open) => !open)}
+            >
+              <SlidersHorizontal size={16} aria-hidden="true" />
+              Filtros
+              {hasFilters && (
+                <span className="bg-accent-soft text-green grid size-5 place-items-center rounded-full text-xs">
+                  {activeFilterCount}
+                  <span className="sr-only"> filtros activos</span>
+                </span>
+              )}
+            </Button>
+          </div>
+        </div>
+        <div
+          id={filtersId}
+          hidden={!filtersOpen}
+          className="border-line desktop:px-4 border-t px-3 py-3"
+        >
+          <div className="desktop:flex grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto] items-end gap-3 [&>fieldset]:col-span-2">
             <DateRangeFields label="Fecha de la reserva" value={range} onChange={setRange} />
             <label className="text-muted desktop:w-40 grid w-full gap-1 text-xs">
               Pista
@@ -129,7 +176,7 @@ export function MyReservationsPage({ history = false }: { history?: boolean }) {
               Limpiar filtros
             </Button>
           </div>
-        </ListToolbar>
+        </div>
         <section id={resultsId} aria-label="Resultados de reservas">
           {filtered.length ? (
             <div className="desktop:grid-cols-2 desktop:px-4 desktop:pb-4 wide:grid-cols-3 grid gap-2 px-3 pb-3">

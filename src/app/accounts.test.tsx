@@ -13,7 +13,7 @@ beforeAll(async () => {
 
 async function signOut(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole('button', { name: 'Menú de usuario' }))
-  await user.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
+  await user.click(screen.getByRole('menuitem', { name: 'Cerrar sesión' }))
   await screen.findByRole('button', { name: 'Crear cuenta local' })
   expect(window.location.pathname).toBe('/login')
 }
@@ -118,7 +118,7 @@ describe('selección de cuentas y sesiones persistentes', () => {
     await user.click(screen.getByRole('button', { name: 'Iniciar sesión' }))
     await screen.findByRole('button', { name: 'Activar suscripción · pago simulado' })
     await user.click(screen.getByRole('button', { name: 'Menú de usuario' }))
-    await user.click(screen.getByRole('link', { name: 'Ajustes de cuenta' }))
+    await user.click(screen.getByRole('menuitem', { name: 'Ajustes de cuenta' }))
     await screen.findByRole('heading', { name: 'Mi cuenta', level: 1 })
     const profile = (await gateway.profiles()).find((item) => item.name === 'Marta Invitada')!
     await expect(gateway.login(profile.id, next)).rejects.toThrow()

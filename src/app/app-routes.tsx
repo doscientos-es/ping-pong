@@ -1,9 +1,18 @@
-import { CalendarDays, CreditCard, History, Settings2, Users, type LucideIcon } from 'lucide-react'
+import {
+  BarChart3,
+  CalendarDays,
+  CreditCard,
+  History,
+  Settings2,
+  Users,
+  type LucideIcon,
+} from 'lucide-react'
 import type { ReactNode } from 'react'
 import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 import type { Member } from '../features/club/domain/model'
+import { MemberProfilePage } from '../features/members/member-profile-page'
 import { MembersPage } from '../features/members/members-page'
 import { PaymentsPage } from '../features/payments/payments-page'
 import { CalendarPage } from '../features/reservations/calendar/calendar-page'
@@ -15,6 +24,9 @@ const AccountingPage = lazy(() =>
   import('../features/accounting/accounting-page').then((module) => ({
     default: module.AccountingPage,
   })),
+)
+const ActivityPage = lazy(() =>
+  import('../features/activity/activity-page').then((module) => ({ default: module.ActivityPage })),
 )
 
 type Role = Member['role']
@@ -30,6 +42,18 @@ interface AppRoute extends NavigationItem {
 }
 
 const routes: AppRoute[] = [
+  {
+    to: '/actividad',
+    label: 'Actividad del club',
+    mobile: 'Actividad',
+    Icon: BarChart3,
+    role: 'admin',
+    element: (
+      <Suspense fallback={<p role="status">Cargando actividad…</p>}>
+        <ActivityPage />
+      </Suspense>
+    ),
+  },
   {
     to: '/contabilidad',
     label: 'Contabilidad',
@@ -113,6 +137,10 @@ export function AppRoutes({ role }: { role: Role }) {
       ))}
       <Route path="*" element={<Navigate to="/" replace />} />
       <Route path="/cuenta" element={<AccountPage />} />
+      <Route
+        path="/socios/:id"
+        element={role === 'admin' ? <MemberProfilePage /> : <Navigate to="/" replace />}
+      />
     </Routes>
   )
 }
