@@ -23,6 +23,28 @@ function installationEvent() {
 }
 
 describe('instalación PWA (API del navegador simulada)', () => {
+  it('comparte el estado de instalación entre la cabecera móvil y la barra lateral', async () => {
+    const target = document.createElement('div')
+    document.body.appendChild(target)
+    try {
+      render(<InstallButton sidebar mobileTarget={target} />)
+      const [desktop, mobile] = screen.getAllByRole('button', { name: 'Instalar app' })
+      const { prompt } = installationEvent()
+      await userEvent.click(mobile)
+      await userEvent.click(screen.getByRole('button', { name: 'Instalar en este dispositivo' }))
+      expect(prompt).toHaveBeenCalledOnce()
+      await userEvent.click(screen.getByRole('button', { name: 'Cerrar' }))
+      expect(mobile).toHaveFocus()
+      await userEvent.click(desktop)
+      expect(screen.getByRole('button', { name: 'Instalar en este dispositivo' })).toBeDisabled()
+      fireEvent(window, new Event('appinstalled'))
+      expect(screen.queryByRole('button', { name: 'Instalar app' })).not.toBeInTheDocument()
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    } finally {
+      target.remove()
+    }
+  })
+
   it('ofrece instrucciones útiles cuando no existe instalación nativa', async () => {
     render(<InstallButton />)
     await userEvent.click(screen.getByRole('button', { name: 'Instalar app' }))

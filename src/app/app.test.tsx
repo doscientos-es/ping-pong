@@ -22,6 +22,32 @@ async function switchTo(user: ReturnType<typeof userEvent.setup>, name: RegExp) 
 }
 
 describe('flujos reales con localStorage, sin backend', () => {
+  it('permite cambiar de perfil y cerrar sesión desde el menú de la barra lateral', async () => {
+    const { gateway } = clubFixture()
+    const user = userEvent.setup()
+    render(<App gateway={gateway} />)
+    await screen.findByLabelText('Ir a una fecha')
+    const menu = screen.getByRole('button', { name: 'Menú de usuario de la barra lateral' })
+    await user.click(menu)
+    const account = screen.getByRole('dialog', { name: 'Mi cuenta' })
+    expect(within(account).getByRole('link', { name: 'Ajustes de cuenta' })).toHaveAttribute(
+      'href',
+      '/cuenta',
+    )
+    await user.click(within(account).getByRole('button', { name: 'Cambiar perfil' }))
+    const profiles = await screen.findByRole('dialog', { name: 'Cambiar perfil' })
+    await user.click(within(profiles).getByRole('button', { name: /Álex · Administración/ }))
+    await screen.findByRole('heading', { name: 'Calendario del club' })
+    await user.click(screen.getByRole('button', { name: 'Menú de usuario de la barra lateral' }))
+    await user.click(
+      within(screen.getByRole('dialog', { name: 'Mi cuenta' })).getByRole('button', {
+        name: 'Cerrar sesión',
+      }),
+    )
+    await screen.findByRole('button', { name: 'Crear cuenta local' })
+    expect(window.location.pathname).toBe('/login')
+  })
+
   it('confirma, conserva tras remontar y cancela una reserva sin generar pagos', async () => {
     const { gateway, repository, seed, slot } = clubFixture()
     const user = userEvent.setup()

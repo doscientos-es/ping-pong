@@ -1,11 +1,15 @@
 import { Download, Smartphone } from 'lucide-react'
 import { useId, useRef } from 'react'
+import { createPortal } from 'react-dom'
 
 import { PwaUpdateNotice } from '../features/pwa/pwa-update-notice'
 import { useInstallation } from '../features/pwa/use-installation'
 import { Button, InlineError, Modal } from '../shared/ui'
 
-export function InstallButton() {
+export function InstallButton({
+  sidebar = false,
+  mobileTarget,
+}: { sidebar?: boolean; mobileTarget?: HTMLElement | null } = {}) {
   const { installed, busy, help, setHelp, error, notice, canInstall, install } = useInstallation()
   const availabilityId = useId()
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -16,22 +20,34 @@ export function InstallButton() {
       : notice ||
         'La instalación directa no está disponible ahora. Usa las instrucciones de tu navegador.'
 
+  function trigger(compact: boolean) {
+    return (
+      <Button
+        variant="ghost"
+        tooltip="Instalar app"
+        aria-label="Instalar app"
+        className={
+          compact
+            ? 'text-green-mid w-11 gap-2 px-2 text-xs'
+            : 'text-green-mid w-full justify-start gap-3 px-3 text-xs'
+        }
+        disabled={busy}
+        onClick={(event) => {
+          if (event.currentTarget instanceof HTMLButtonElement)
+            triggerRef.current = event.currentTarget
+          setHelp(true)
+        }}
+      >
+        <Download size={17} />
+        {!compact && <span>Instalar app</span>}
+      </Button>
+    )
+  }
+
   return (
     <>
-      {!installed && (
-        <Button
-          ref={triggerRef}
-          variant="ghost"
-          tooltip="Instalar app"
-          aria-label="Instalar app"
-          className="text-green-mid max-desktop:w-11 gap-2 px-2 text-xs"
-          disabled={busy}
-          onClick={() => setHelp(true)}
-        >
-          <Download size={17} />
-          <span className="max-desktop:hidden">Instalar app</span>
-        </Button>
-      )}
+      {!installed && trigger(!sidebar)}
+      {!installed && sidebar && mobileTarget && createPortal(trigger(true), mobileTarget)}
       <Modal
         open={help && !installed}
         onClose={() => setHelp(false)}
@@ -91,7 +107,7 @@ export function InstallButton() {
           </p>
         </div>
       </Modal>
-      <PwaUpdateNotice />
+      {createPortal(<PwaUpdateNotice />, document.body)}
     </>
   )
 }

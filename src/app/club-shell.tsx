@@ -16,6 +16,7 @@ import { usePageEffects } from './use-page-effects'
 export function ClubShell() {
   const { profiles, selectedId } = useClub()
   const [dialog, setDialog] = useState<'profiles' | 'help' | null>(null)
+  const [mobileInstallTarget, setMobileInstallTarget] = useState<HTMLDivElement | null>(null)
   const online = useOnlineStatus()
   const { pathname } = useLocation()
   const actor = profiles.find((profile) => profile.id === selectedId)
@@ -25,6 +26,7 @@ export function ClubShell() {
       ? 'Mi cuenta'
       : (navigation.find((item) => item.to === pathname)?.label ?? CLUB_NAME)
   const openProfiles = () => setDialog('profiles')
+  const openHelp = () => setDialog('help')
   const closeDialog = () => setDialog(null)
   usePageEffects(title, selectedId)
 
@@ -44,10 +46,16 @@ export function ClubShell() {
         actor={actor}
         navigation={navigation}
         onSwitchProfile={openProfiles}
-        onHelp={() => setDialog('help')}
+        onHelp={openHelp}
+        mobileInstallTarget={mobileInstallTarget}
       />
       <div className="desktop:ml-[var(--club-sidebar-width)]">
-        <ClubHeader title={title} actor={actor} onSwitchProfile={openProfiles} />
+        <ClubHeader
+          actor={actor}
+          onSwitchProfile={openProfiles}
+          onHelp={openHelp}
+          installTargetRef={setMobileInstallTarget}
+        />
         {!online && (
           <p
             role="status"

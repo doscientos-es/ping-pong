@@ -8,6 +8,9 @@ import { navigationFor } from '../app-routes'
 import { ClubNavigation } from './club-navigation'
 import { ClubSidebar } from './club-sidebar'
 
+vi.mock('../../app/club-context', () => ({ useClub: () => ({ signOut: vi.fn() }) }))
+vi.mock('../install-button', () => ({ InstallButton: () => <button>Instalar app</button> }))
+
 describe('navegación del club', () => {
   it('identifica el enlace activo y mantiene accesible su etiqueta completa', () => {
     render(
@@ -60,7 +63,7 @@ describe('navegación del club', () => {
     expect(payments).toHaveAttribute('aria-current', 'page')
   })
 
-  it('conserva las acciones de ayuda y perfil con nombres largos y controles de @doscientos/ui', async () => {
+  it('ofrece instalación y el menú de usuario en la barra lateral', async () => {
     const user = userEvent.setup()
     const onHelp = vi.fn()
     const onSwitchProfile = vi.fn()
@@ -80,6 +83,7 @@ describe('navegación del club', () => {
           navigation={navigationFor(actor.role)}
           onHelp={onHelp}
           onSwitchProfile={onSwitchProfile}
+          mobileInstallTarget={null}
         />
       </MemoryRouter>,
     )
@@ -91,15 +95,26 @@ describe('navegación del club', () => {
       '/',
     )
     const profile = within(sidebar).getByRole('button', {
-      name: 'María del Carmen Fernández de la Torre Administrador',
+      name: 'Menú de usuario de la barra lateral',
     })
     expect(profile).toHaveAttribute('data-slot', 'button')
+    expect(within(profile).getByText('María del Carmen Fernández de la Torre')).toBeInTheDocument()
     expect(within(profile).getByText('Administrador')).toBeInTheDocument()
-    await user.click(within(sidebar).getByRole('button', { name: '¿Cómo funciona?' }))
-    expect(onHelp).toHaveBeenCalledTimes(1)
-    await user.tab()
-    expect(profile).toHaveFocus()
-    await user.keyboard('{Enter}')
+    expect(within(sidebar).getByRole('button', { name: 'Instalar app' })).toBeInTheDocument()
+    await user.click(profile)
+    const dialog = screen.getByRole('dialog', { name: 'Mi cuenta' })
+    expect(within(dialog).getByRole('link', { name: 'Ajustes de cuenta' })).toHaveAttribute(
+      'href',
+      '/cuenta',
+    )
+    await user.click(within(dialog).getByRole('button', { name: 'Cambiar perfil' }))
     expect(onSwitchProfile).toHaveBeenCalledTimes(1)
+    await user.click(profile)
+    await user.click(
+      within(screen.getByRole('dialog', { name: 'Mi cuenta' })).getByRole('button', {
+        name: '¿Cómo funciona?',
+      }),
+    )
+    expect(onHelp).toHaveBeenCalledTimes(1)
   })
 })
