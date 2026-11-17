@@ -1,0 +1,37 @@
+@import 'tailwindcss';
+@import '@doscientos/ui/styles.css';
+@import './styles/base.css';
+@import './styles/print.css';
+
+/* Shared tokens; component styles live with their React components. */
+@theme {
+  --font-sans: 'DM Sans Variable', sans-serif;
+  --font-heading: 'Manrope Variable', sans-serif;
+  --color-green: #163d30;
+  --color-green-mid: #38644d;
+  --color-accent-soft: #edf3e2;
+  --color-lime: #d8eea1;
+  --color-muted: #61705e;
+  --color-line: #e5e9e0;
+  --color-surface: #fdfefa;
+  --color-canvas: #f6f7f3;
+  --breakpoint-desktop: 761px;
+  --breakpoint-wide: 1251px;
+}
+
+:root {
+  --background: #fdfefa;
+  --foreground: #23392e;
+  --primary: #163d30;
+  --primary-foreground: #ffffff;
+  --secondary: #edf3e2;
+  --secondary-foreground: #38644d;
+  --muted: #edf3e2;
+  --muted-foreground: #61705e;
+  --border: #e5e9e0;
+  --border-strong: #9bad94;
+  --ring: #7b9d55;
+  --destructive: #a44836;
+  --popover: #fdfefa;
+  --popover-foreground: #23392e;
+}

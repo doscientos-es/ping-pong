@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+.git/
+.vite/
+.vercel/
+*.local
+*.log
+.env
+.env.*
+.npmrc
+*.pem
+*.key
