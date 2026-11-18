@@ -124,6 +124,11 @@ export function InstallButton({
             La instalación requiere HTTPS o localhost. Si abriste el enlace dentro de otra app,
             ábrelo en tu navegador. Los datos siguen guardados en este dispositivo.
           </p>
+          {import.meta.env.DEV && (
+            <p className="text-muted text-xs">
+              Para probar la app instalable en local, usa la vista previa de producción.
+            </p>
+          )}
         </div>
       </Modal>
     </>

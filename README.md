@@ -196,9 +196,10 @@ método de pago. Administración puede regenerar estos datos desde
 La PWA se genera en producción: ejecutar `pnpm build` y `pnpm preview`.
 Usar la URL mostrada por Vite. Servir siempre en la raíz del dominio.
 
-- **Instalar app** abre un diálogo con instrucciones manuales siempre disponibles.
-  Si el navegador emite `beforeinstallprompt`, se habilita **Instalar en este dispositivo**,
-  también si el evento llega con el diálogo abierto. Solo ese botón abre el permiso nativo.
+- En el login, **Instalar app** abre el aviso nativo si el navegador lo ofrece;
+  en caso contrario, muestra las instrucciones. Desde la barra lateral o la cabecera móvil
+  se abre primero la ayuda; **Instalar en este dispositivo** solo aparece si el navegador
+  ofrece la instalación directa, incluso si el aviso llega con la ayuda ya abierta.
 - Chrome/Edge en Android o escritorio: usar ese botón o el menú del navegador.
 - iPhone/iPad: abrir en Safari → Compartir → Añadir a pantalla de inicio.
 - Cada permiso nativo se consume una sola vez; tras cancelar o fallar siguen disponibles
