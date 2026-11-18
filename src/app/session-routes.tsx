@@ -4,6 +4,7 @@ import { AccountSelection } from '../features/session/profile-switcher'
 import { CLUB_NAME } from '../shared/brand'
 import { useClub } from './club-context'
 import { ClubShell } from './club-shell'
+import { InstallButton } from './install-button'
 import { usePageEffects } from './use-page-effects'
 
 export function SessionRoutes() {
@@ -29,9 +30,36 @@ function LoginPage() {
   usePageEffects('Iniciar sesión', '')
 
   return (
-    <main className="mx-auto grid min-h-dvh max-w-lg content-center gap-4 px-4 py-8">
-      <h1 className="text-lg">{CLUB_NAME}</h1>
-      {error ? <p role="alert">{error}</p> : <AccountSelection />}
+    <main className="desktop:max-w-5xl mx-auto grid min-h-dvh max-w-lg content-center px-4 py-8">
+      <div className="desktop:grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)] desktop:gap-8 grid items-start gap-5">
+        <div className="border-line bg-surface desktop:p-6 grid min-w-0 gap-4 rounded-2xl border p-4">
+          <h1 className="text-lg">{CLUB_NAME}</h1>
+          {error ? <p role="alert">{error}</p> : <AccountSelection />}
+        </div>
+        <aside
+          aria-label="La app del club"
+          className="from-green to-green-mid desktop:p-8 grid min-w-0 gap-5 rounded-2xl bg-linear-to-br p-5 text-white shadow-lg"
+        >
+          <div className="flex items-center gap-3">
+            <img src="/icons/icon-192.png" alt="" width="56" height="56" className="rounded-xl" />
+            <div>
+              <p className="text-lime text-xs font-semibold">Aplicación web</p>
+              <p className="text-sm font-semibold">{CLUB_NAME}</p>
+            </div>
+          </div>
+          <div className="grid gap-2">
+            <h2 className="text-xl text-white">El club, en tu pantalla de inicio</h2>
+            <p className="text-sm leading-relaxed text-white/90">
+              Reserva pista y consulta tus partidas desde el icono de la app, en el móvil o el
+              ordenador.
+            </p>
+          </div>
+          <InstallButton login />
+          <p className="text-xs text-white/85">
+            Se instala desde el navegador, sin pasar por una tienda.
+          </p>
+        </aside>
+      </div>
     </main>
   )
 }

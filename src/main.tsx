@@ -8,6 +8,7 @@ import { App } from './app/app'
 import { createClubService } from './features/club/application/club-service'
 import { createLocalRepository } from './features/club/infrastructure/local-repository'
 import { createDemoSeed } from './features/club/infrastructure/seed'
+import { PwaUpdateNotice } from './features/pwa/pwa-update-notice'
 
 const repository = createLocalRepository(
   {
@@ -21,5 +22,6 @@ const gateway = createClubService(repository, undefined, createDemoSeed)
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App gateway={gateway} />
+    <PwaUpdateNotice />
   </StrictMode>,
 )

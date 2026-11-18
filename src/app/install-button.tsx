@@ -1,24 +1,30 @@
-import { Download, Smartphone } from 'lucide-react'
-import { useId, useRef } from 'react'
+import { Check, Download, Smartphone } from 'lucide-react'
+import { useId, useRef, useState, type MouseEvent } from 'react'
 import { createPortal } from 'react-dom'
 
-import { PwaUpdateNotice } from '../features/pwa/pwa-update-notice'
-import { useInstallation } from '../features/pwa/use-installation'
+import { useAppInstallation } from '../features/pwa/installation-provider'
 import { Button, InlineError, Modal } from '../shared/ui'
 
 export function InstallButton({
+  login = false,
   sidebar = false,
   mobileTarget,
-}: { sidebar?: boolean; mobileTarget?: HTMLElement | null } = {}) {
-  const { installed, busy, help, setHelp, error, notice, canInstall, install } = useInstallation()
+}: { login?: boolean; sidebar?: boolean; mobileTarget?: HTMLElement | null } = {}) {
+  const { installed, busy, error, notice, canInstall, install } = useAppInstallation()
+  const [help, setHelp] = useState(false)
   const availabilityId = useId()
   const triggerRef = useRef<HTMLButtonElement>(null)
   const availability = busy
     ? 'Confirma o cancela la instalación en la ventana del navegador.'
     : canInstall
       ? 'Tu navegador permite instalar la app directamente en este dispositivo.'
-      : notice ||
-        'La instalación directa no está disponible ahora. Usa las instrucciones de tu navegador.'
+      : notice || 'Instala la app desde el menú de tu navegador siguiendo estos pasos.'
+
+  function openHelp(event: MouseEvent<HTMLElement>) {
+    if (event.currentTarget instanceof HTMLButtonElement) triggerRef.current = event.currentTarget
+    setHelp(true)
+    if (login && canInstall) void install()
+  }
 
   function trigger(compact: boolean) {
     return (
@@ -32,11 +38,7 @@ export function InstallButton({
             : 'text-green-mid w-full justify-start gap-3 px-3 text-xs'
         }
         disabled={busy}
-        onClick={(event) => {
-          if (event.currentTarget instanceof HTMLButtonElement)
-            triggerRef.current = event.currentTarget
-          setHelp(true)
-        }}
+        onClick={openHelp}
       >
         <Download size={17} />
         {!compact && <span>Instalar app</span>}
@@ -46,7 +48,23 @@ export function InstallButton({
 
   return (
     <>
-      {!installed && trigger(!sidebar)}
+      {login ? (
+        installed ? (
+          <p className="flex items-center gap-2 text-sm font-semibold">
+            <Check size={18} aria-hidden="true" /> App instalada
+          </p>
+        ) : (
+          <Button
+            className="bg-lime text-green w-full hover:bg-[#e5f4bd] focus-visible:ring-white"
+            disabled={busy}
+            onClick={openHelp}
+          >
+            <Download size={18} aria-hidden="true" /> Instalar app
+          </Button>
+        )
+      ) : (
+        !installed && trigger(!sidebar)
+      )}
       {!installed && sidebar && mobileTarget && createPortal(trigger(true), mobileTarget)}
       <Modal
         open={help && !installed}
@@ -66,14 +84,16 @@ export function InstallButton({
               <Smartphone size={22} aria-hidden="true" />
               <h3 className="text-sm">En este dispositivo</h3>
             </div>
-            <Button
-              disabled={!canInstall || busy}
-              aria-describedby={availabilityId}
-              onClick={() => void install()}
-            >
-              <Download size={17} aria-hidden="true" />
-              Instalar en este dispositivo
-            </Button>
+            {(canInstall || busy) && (
+              <Button
+                disabled={busy}
+                aria-describedby={availabilityId}
+                onClick={() => void install()}
+              >
+                <Download size={17} aria-hidden="true" />
+                Instalar en este dispositivo
+              </Button>
+            )}
             <p id={availabilityId} role="status" className="text-green text-xs" aria-atomic="true">
               {availability}
             </p>
@@ -98,16 +118,14 @@ export function InstallButton({
                 <li>Si no aparece esa opción, puedes seguir usando la web.</li>
               </ol>
             </div>
+            <p className="text-muted text-xs">Safari en Mac: Archivo → Añadir al Dock.</p>
           </section>
           <p className="text-muted text-xs leading-relaxed">
-            Disponible en HTTPS o localhost. Tras la primera carga completa y la activación del modo
-            sin conexión, podrás usar la demo offline. Los datos se guardan solo en este navegador.
-            La instalación no los sincroniza ni crea una copia de seguridad. No necesitas descargar
-            un APK.
+            La instalación requiere HTTPS o localhost. Si abriste el enlace dentro de otra app,
+            ábrelo en tu navegador. Los datos siguen guardados en este dispositivo.
           </p>
         </div>
       </Modal>
-      {createPortal(<PwaUpdateNotice />, document.body)}
     </>
   )
 }

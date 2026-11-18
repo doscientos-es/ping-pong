@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 
+type InstallChoice = { outcome: 'accepted' | 'dismissed' }
+
 interface InstallPrompt extends Event {
-  prompt(): Promise<void>
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+  prompt(): Promise<InstallChoice | void>
+  userChoice: Promise<InstallChoice>
 }
 
 export function useInstallation() {
   const [prompt, setPrompt] = useState<InstallPrompt | null>(null)
-  const [help, setHelp] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
@@ -26,7 +27,6 @@ export function useInstallation() {
     const onInstalled = () => {
       setInstalled(true)
       setPrompt(null)
-      setHelp(false)
     }
     window.addEventListener('beforeinstallprompt', onPrompt)
     window.addEventListener('appinstalled', onInstalled)
@@ -37,19 +37,16 @@ export function useInstallation() {
   }, [])
 
   async function install() {
-    if (running.current) return
+    if (!prompt || running.current) return
     setError('')
     setNotice('')
-    if (!prompt) {
-      setHelp(true)
-      return
-    }
     running.current = true
     setBusy(true)
     setPrompt(null)
     try {
-      await prompt.prompt()
-      const choice = await prompt.userChoice
+      // Invoke synchronously from the click; the browser requires a user gesture.
+      const result = await prompt.prompt()
+      const choice = result ?? (await prompt.userChoice)
       setNotice(
         choice.outcome === 'accepted'
           ? 'Solicitud aceptada. El navegador completará la instalación.'
@@ -58,12 +55,11 @@ export function useInstallation() {
       // Only appinstalled confirms that installation actually completed.
     } catch {
       setError('El navegador no pudo abrir la instalación. Puedes intentarlo desde su menú.')
-      setHelp(true)
     } finally {
       running.current = false
       setBusy(false)
     }
   }
 
-  return { installed, help, setHelp, busy, error, notice, canInstall: prompt !== null, install }
+  return { installed, busy, error, notice, canInstall: prompt !== null, install }
 }
