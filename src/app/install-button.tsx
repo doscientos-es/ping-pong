@@ -1,5 +1,5 @@
 import { Check, Download, Smartphone } from 'lucide-react'
-import { useId, useRef, useState, type MouseEvent } from 'react'
+import { useId, useRef, useState, type ComponentProps } from 'react'
 import { createPortal } from 'react-dom'
 
 import { useAppInstallation } from '../features/pwa/installation-provider'
@@ -20,7 +20,7 @@ export function InstallButton({
       ? 'Tu navegador permite instalar la app directamente en este dispositivo.'
       : notice || 'Instala la app desde el menú de tu navegador siguiendo estos pasos.'
 
-  function openHelp(event: MouseEvent<HTMLElement>) {
+  const openHelp: NonNullable<ComponentProps<typeof Button>['onClick']> = (event) => {
     if (event.currentTarget instanceof HTMLButtonElement) triggerRef.current = event.currentTarget
     setHelp(true)
     if (login && canInstall) void install()
@@ -32,6 +32,7 @@ export function InstallButton({
         variant="ghost"
         tooltip="Instalar app"
         aria-label="Instalar app"
+        aria-haspopup="dialog"
         className={
           compact
             ? 'text-green-mid w-11 gap-2 px-2 text-xs'
@@ -56,6 +57,7 @@ export function InstallButton({
         ) : (
           <Button
             className="bg-lime text-green w-full hover:bg-[#e5f4bd] focus-visible:ring-white"
+            aria-haspopup="dialog"
             disabled={busy}
             onClick={openHelp}
           >
@@ -104,7 +106,7 @@ export function InstallButton({
               <ol className="grid list-decimal gap-1 pl-5 text-xs">
                 <li>Abre esta web en Safari.</li>
                 <li>Pulsa Compartir y elige «Añadir a pantalla de inicio».</li>
-                <li>Confirma con «Añadir» y abre la app desde su icono.</li>
+                <li>Activa «Abrir como app web» si aparece y confirma con «Añadir».</li>
               </ol>
             </div>
             <div>

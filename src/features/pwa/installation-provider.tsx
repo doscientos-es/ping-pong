@@ -6,7 +6,9 @@ const InstallationContext = createContext<ReturnType<typeof useInstallation> | n
 
 export function InstallationProvider({ children }: { children: ReactNode }) {
   const installation = useInstallation()
-  return <InstallationContext.Provider value={installation}>{children}</InstallationContext.Provider>
+  return (
+    <InstallationContext.Provider value={installation}>{children}</InstallationContext.Provider>
+  )
 }
 
 export function useAppInstallation() {
