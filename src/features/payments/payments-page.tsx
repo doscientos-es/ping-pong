@@ -15,6 +15,7 @@ import {
   PageHeading,
   Pagination,
   Panel,
+  PeriodFields,
   SearchField,
   SectionHeading,
   Stat,
@@ -41,7 +42,8 @@ export function PaymentsPage() {
   const subscriptionActive = view!.subscriptionActive
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('all')
-  const [month, setMonth] = useState(subscriptionActive ? currentPeriod : '')
+  const [selectedPeriod, setSelectedPeriod] = useState(subscriptionActive ? currentPeriod : '')
+  const month = selectedPeriod.includes('-') ? selectedPeriod : ''
   const [tab, setTab] = useState('subscriptions')
   const [selected, setSelected] = useState<Payment | null>(null)
   const [paying, setPaying] = useState<{ memberId: string; period: string } | null>(null)
@@ -64,7 +66,7 @@ export function PaymentsPage() {
         .filter(
           (item) =>
             (status === 'all' || item.status === status) &&
-            (!month || item.period === month) &&
+            item.period.startsWith(selectedPeriod) &&
             `${item.customer.name} ${item.invoiceNumber}`.toLowerCase().includes(query) &&
             (!(range.from || range.to) || withinDateRange(dateKey(new Date(item.paidAt)), range)),
         )
@@ -72,11 +74,11 @@ export function PaymentsPage() {
           (a, b) =>
             new Date(b.paidAt).getTime() - new Date(a.paidAt).getTime() || b.id.localeCompare(a.id),
         ),
-    [all, status, month, query, range],
+    [all, status, selectedPeriod, query, range],
   )
   const pagination = usePagination(
     payments,
-    JSON.stringify([view!.actor.id, status, month, query, range]),
+    JSON.stringify([view!.actor.id, status, selectedPeriod, query, range]),
   )
   const paid = payments
     .filter((item) => item.status === 'paid')
@@ -107,12 +109,13 @@ export function PaymentsPage() {
         value={search}
         onChange={(event) => setSearch(event.target.value)}
       />
-      <div className="flex flex-wrap items-center gap-2">
-        <input
-          aria-label="Periodo de la cuota"
-          type="month"
-          value={month}
-          onChange={(event) => setMonth(event.target.value)}
+      <div className="flex flex-wrap items-end gap-2">
+        <PeriodFields
+          label="Periodo de la cuota"
+          value={selectedPeriod}
+          currentYear={now.getFullYear()}
+          allowAllPeriods
+          onChange={setSelectedPeriod}
         />
         {(filterSection === 'receipts' || month) && (
           <Button
@@ -138,12 +141,12 @@ export function PaymentsPage() {
             )}
           </Button>
         )}
-        {month && (
+        {selectedPeriod && (
           <Button
             variant="link"
             className="text-green-mid text-xs font-semibold"
             onClick={() => {
-              setMonth('')
+              setSelectedPeriod('')
               setTab('receipts')
             }}
           >
@@ -178,7 +181,7 @@ export function PaymentsPage() {
                 setRange(emptyDateRange)
                 setSearch('')
                 setStatus('all')
-                setMonth('')
+                setSelectedPeriod('')
               }}
             >
               Limpiar filtros de pagos
@@ -222,7 +225,9 @@ export function PaymentsPage() {
           label={admin ? 'Socios al día en el periodo' : 'Tu suscripción'}
           value={
             admin
-              ? `${paidMembers} / ${members.length}`
+              ? month
+                ? `${paidMembers} / ${members.length}`
+                : '—'
               : subscriptionActive
                 ? 'Activa'
                 : 'Pendiente'
@@ -266,9 +271,7 @@ export function PaymentsPage() {
                   onVoid={setVoiding}
                 />
               ) : (
-                <p className="text-muted p-4 text-sm">
-                  Selecciona un periodo para gestionar cuotas.
-                </p>
+                <p className="text-muted p-4 text-sm">Selecciona un mes para gestionar cuotas.</p>
               )}
             </TabsContent>
             <TabsContent id="receipts">{history}</TabsContent>

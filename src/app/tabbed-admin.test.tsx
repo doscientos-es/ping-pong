@@ -125,7 +125,9 @@ describe('módulos administrativos en pestañas con repositorio real', () => {
       'aria-selected',
       'true',
     )
-    expect(screen.getByLabelText('Periodo de la cuota')).toHaveValue('')
+    const period = within(screen.getByRole('group', { name: 'Periodo de la cuota' }))
+    expect(period.getByRole('combobox', { name: 'Año' })).toHaveValue('')
+    expect(period.getByRole('combobox', { name: 'Mes' })).toHaveValue('')
     expect(screen.getByLabelText('Estado del pago')).toHaveValue('voided')
   })
 })

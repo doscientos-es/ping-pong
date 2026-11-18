@@ -13,6 +13,7 @@ import {
   PageHeading,
   Pagination,
   Panel,
+  PeriodFields,
   SearchField,
   SectionHeading,
   Stat,
@@ -38,7 +39,7 @@ export function AccountingPage() {
   const { view, gateway, selectedId } = useClub()
   const now = useClubClock()
   const [month, setMonth] = useState(() => periodKey(now))
-  const [period, setPeriod] = useState<ReportPeriod>('month')
+  const [period, setPeriod] = useState<ReportPeriod>('quarter')
   const [filter, setFilter] = useState('all')
   const [search, setSearch] = useState('')
   const [tab, setTab] = useState('summary')
@@ -100,22 +101,13 @@ export function AccountingPage() {
             <option value="year">Año</option>
           </select>
         </label>
-        <label className="text-muted grid gap-1 text-xs">
-          Mes de referencia
-          <input
-            type="month"
-            value={month}
-            min="1900-01"
-            max="9999-12"
-            onChange={(event) => {
-              if (
-                /^\d{4}-(0[1-9]|1[0-2])$/.test(event.target.value) &&
-                event.target.value >= '1900-01'
-              )
-                setMonth(event.target.value)
-            }}
-          />
-        </label>
+        <PeriodFields
+          label="Periodo contable"
+          period={period}
+          value={month}
+          currentYear={now.getFullYear()}
+          onChange={setMonth}
+        />
         <p className="text-muted pb-2 text-xs">
           {dateLabel(from, { day: 'numeric', month: 'short', year: 'numeric' })} —{' '}
           {dateLabel(to, { day: 'numeric', month: 'short', year: 'numeric' })}
@@ -139,7 +131,11 @@ export function AccountingPage() {
           Exportar resumen
         </Button>
       </div>
-      <div className="mb-4 grid grid-cols-2 gap-2 lg:grid-cols-4">
+      <div
+        role="group"
+        aria-label="Totales del periodo"
+        className="mb-4 grid grid-cols-2 gap-2 lg:grid-cols-4"
+      >
         <Stat label="Ingresos netos" value={money(totals.income)} icon={Banknote} />
         <Stat label="Gastos contables" value={money(totals.expenses)} icon={Receipt} />
         <Stat label="Resultado neto" value={money(totals.profit)} icon={ChartNoAxesCombined} />

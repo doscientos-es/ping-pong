@@ -1,3 +1,5 @@
+import { useId } from 'react'
+
 import { dateLabel, money } from '../../shared/format'
 import { dateKey } from '../club/domain/rules'
 import { monthRange, summarize } from './domain/finance'
@@ -12,6 +14,7 @@ export function RevenueChart({
   from: string
   to: string
 }) {
+  const titleId = useId()
   const ranges: { from: string; to: string; label: string }[] = []
   const limit = new Date(`${to}T12:00:00`)
   if (from.slice(0, 7) === to.slice(0, 7)) {
@@ -39,9 +42,11 @@ export function RevenueChart({
   const points = ranges.map((range) => ({ ...range, ...summarize(rows, range.from, range.to) }))
   const maximum = Math.max(1, ...points.flatMap((point) => [point.income, point.expenses]))
   return (
-    <figure className="p-4">
+    <figure className="p-4" aria-labelledby={titleId}>
       <figcaption>
-        <h3 className="text-sm font-semibold">Ingresos y gastos por fecha de documento</h3>
+        <h3 id={titleId} className="text-sm font-semibold">
+          Ingresos y gastos por fecha de documento
+        </h3>
       </figcaption>
       {points.every((point) => point.income === 0 && point.expenses === 0) && (
         <p className="text-muted mt-4 text-xs">No hay ingresos ni gastos en este periodo.</p>

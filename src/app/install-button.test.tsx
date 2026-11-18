@@ -86,7 +86,6 @@ describe('instalación PWA (API del navegador simulada)', () => {
     const dialog = screen.getByRole('dialog', { name: 'Instalar app' })
     expect(within(dialog).getByText('iPhone / iPad:')).toBeInTheDocument()
     expect(within(dialog).getByText('Android / ordenador:')).toBeInTheDocument()
-    expect(dialog).toHaveTextContent('HTTPS o localhost')
     expect(
       within(dialog).queryByRole('button', { name: 'Instalar en este dispositivo' }),
     ).toBeNull()

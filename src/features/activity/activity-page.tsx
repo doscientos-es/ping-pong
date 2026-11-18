@@ -4,7 +4,7 @@ import { useClubClock } from '../../app/club-clock'
 import { useClub } from '../../app/club-context'
 import { dateLabel } from '../../shared/format'
 import { reportRange, type ReportPeriod } from '../../shared/report-period'
-import { Button, ButtonLink, PageHeading } from '../../shared/ui'
+import { Button, ButtonLink, PageHeading, PeriodFields } from '../../shared/ui'
 import { COURTS } from '../club/domain/model'
 import { periodKey } from '../club/domain/rules'
 import { ActivityCharts } from './activity-charts'
@@ -48,23 +48,13 @@ export function ActivityPage() {
             <option value="year">Año</option>
           </select>
         </label>
-        <label className="text-muted grid gap-1 text-xs">
-          Mes de referencia
-          <input
-            type="month"
-            value={month}
-            min="1900-01"
-            max="9999-12"
-            onChange={(event) => {
-              if (
-                /^\d{4}-(0[1-9]|1[0-2])$/.test(event.target.value) &&
-                event.target.value >= '1900-01' &&
-                event.target.value <= '9999-12'
-              )
-                setMonth(event.target.value)
-            }}
-          />
-        </label>
+        <PeriodFields
+          label="Periodo de actividad"
+          period={period}
+          value={month}
+          currentYear={now.getFullYear()}
+          onChange={setMonth}
+        />
         <label className="text-muted grid gap-1 text-xs">
           Pista
           <select value={court} onChange={(event) => setCourt(event.target.value)}>

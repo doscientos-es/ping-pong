@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeAll, describe, expect, it, vi } from 'vitest'
 
@@ -11,6 +11,35 @@ beforeAll(async () => {
 })
 
 describe('contabilidad administrativa con repositorio real', () => {
+  it('abre el trimestre actual y permite consultar otro trimestre, año o mes', async () => {
+    const { gateway, now } = clubFixture()
+    const previousYear = String(now.getFullYear() - 1)
+    localStorage.setItem('spin-club:profile', 'admin')
+    window.history.replaceState(null, '', '/contabilidad')
+    const user = userEvent.setup()
+    render(<App gateway={gateway} />)
+    const view = await screen.findByRole('combobox', { name: 'Vista' })
+    const period = within(screen.getByRole('group', { name: 'Periodo contable' }))
+    const chart = screen.getByRole('figure', { name: 'Ingresos y gastos por fecha de documento' })
+    const quarter = period.getByRole('combobox', { name: 'Trimestre' })
+    expect(view).toHaveValue('quarter')
+    expect(period.getByRole('combobox', { name: 'Año' })).toHaveValue(String(now.getFullYear()))
+    expect(quarter).toHaveValue(String(Math.floor(now.getMonth() / 3) * 3 + 1).padStart(2, '0'))
+    await user.selectOptions(period.getByRole('combobox', { name: 'Año' }), previousYear)
+    await user.selectOptions(quarter, '04')
+    await user.click(within(chart).getByText('Ver desglose del periodo'))
+    expect(chart).toHaveTextContent(`${previousYear}-04-01`)
+    expect(chart).toHaveTextContent(`${previousYear}-06-30`)
+    expect(chart).not.toHaveTextContent(`${previousYear}-07-01`)
+    await user.selectOptions(view, 'year')
+    expect(period.queryByRole('combobox', { name: 'Trimestre' })).not.toBeInTheDocument()
+    expect(chart).toHaveTextContent(`${previousYear}-12-31`)
+    await user.selectOptions(view, 'month')
+    await user.selectOptions(period.getByRole('combobox', { name: 'Mes' }), '02')
+    expect(chart).toHaveTextContent(`${previousYear}-02-01`)
+    expect(chart).not.toHaveTextContent(`${previousYear}-04-01`)
+  })
+
   it('crea una factura, la conserva al recargar, edita el cobro y anula sin borrar historial', async () => {
     const { gateway, now } = clubFixture()
     localStorage.setItem('spin-club:profile', 'admin')
@@ -18,6 +47,10 @@ describe('contabilidad administrativa con repositorio real', () => {
     const user = userEvent.setup()
     const app = render(<App gateway={gateway} />)
     await screen.findByRole('heading', { name: 'Contabilidad', level: 1 })
+    const expenses = () =>
+      within(screen.getByRole('group', { name: 'Totales del periodo' })).getByText(
+        'Gastos contables',
+      ).parentElement
     expect(
       screen.getByRole('figure', { name: 'Ingresos y gastos por fecha de documento' }),
     ).toBeInTheDocument()
@@ -33,7 +66,7 @@ describe('contabilidad administrativa con repositorio real', () => {
     await user.click(within(dialog).getByRole('button', { name: 'Guardar movimiento' }))
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
     expect(screen.getByRole('article', { name: 'Material deportivo' })).toHaveTextContent('12,10')
-    expect(screen.getByText('Gastos contables').parentElement).toHaveTextContent('10,00')
+    expect(expenses()).toHaveTextContent('10,00')
     app.unmount()
     render(<App gateway={gateway} />)
     await user.click(await screen.findByRole('tab', { name: 'Movimientos' }))
@@ -52,10 +85,11 @@ describe('contabilidad administrativa con repositorio real', () => {
     await user.click(screen.getByRole('button', { name: 'Confirmar anulación' }))
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
     expect(screen.getByRole('article', { name: 'Material deportivo' })).toHaveTextContent('Anulado')
-    expect(screen.getByText('Gastos contables').parentElement).toHaveTextContent('0,00')
-    fireEvent.change(screen.getByLabelText('Mes de referencia'), {
-      target: { value: `${now.getFullYear() - 1}-01` },
-    })
+    expect(expenses()).toHaveTextContent('0,00')
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: 'Año' }),
+      String(now.getFullYear() - 1),
+    )
     expect(screen.queryByRole('article', { name: 'Material deportivo' })).not.toBeInTheDocument()
   }, 15000)
 })
