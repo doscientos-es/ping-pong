@@ -48,7 +48,7 @@ function LoginPage() {
             </div>
           </div>
           <div className="grid gap-2">
-            <h2 className="text-xl text-white">El club, en tu pantalla de inicio</h2>
+            <h2 className="text-xl text-white">Instala nuestra app oficial</h2>
             <p className="text-sm leading-relaxed text-white/90">
               Reserva pista y consulta tus partidas desde el icono de la app, en el móvil o el
               ordenador.
