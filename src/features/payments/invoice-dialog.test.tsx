@@ -77,7 +77,7 @@ describe('acciones del comprobante (APIs de descarga e impresión simuladas)', (
       expect(dialog).toHaveTextContent('Suscripción mensual · Perception')
       expect(dialog).toHaveTextContent(status === 'paid' ? 'Pagado · demo' : 'Anulado · demo')
       expect(dialog).toHaveTextContent('SIN VALIDEZ FISCAL')
-      expect(dialog).toHaveTextContent('momento del pago de la cuota')
+      expect(dialog).toHaveTextContent('momento en que se registró el pago')
       fireEvent.click(screen.getByRole('button', { name: 'Imprimir / PDF' }))
       expect(print).toHaveBeenCalledTimes(1)
       expect(payment).toEqual(before)
