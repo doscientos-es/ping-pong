@@ -47,13 +47,7 @@ function LoginPage() {
               <p className="text-sm font-semibold">{CLUB_NAME}</p>
             </div>
           </div>
-          <div className="grid gap-2">
-            <h2 className="text-xl text-white">Instala nuestra app oficial</h2>
-            <p className="text-sm leading-relaxed text-white/90">
-              Reserva pista y consulta tus partidas desde el icono de la app, en el móvil o el
-              ordenador.
-            </p>
-          </div>
+          <h2 className="text-xl text-white">Instala nuestra app oficial</h2>
           <InstallButton login />
           <p className="text-xs text-white/85">
             Se instala desde el navegador, sin pasar por una tienda.

@@ -39,12 +39,9 @@ export function RevenueChart({
   const points = ranges.map((range) => ({ ...range, ...summarize(rows, range.from, range.to) }))
   const maximum = Math.max(1, ...points.flatMap((point) => [point.income, point.expenses]))
   return (
-    <figure className="p-4" aria-label="Evolución de ingresos y gastos">
+    <figure className="p-4">
       <figcaption>
-        <h3 className="text-sm font-semibold">Evolución del periodo</h3>
-        <p className="text-muted mt-1 text-xs">
-          Por fecha de documento · ingresos netos y gastos contables
-        </p>
+        <h3 className="text-sm font-semibold">Ingresos y gastos por fecha de documento</h3>
       </figcaption>
       {points.every((point) => point.income === 0 && point.expenses === 0) && (
         <p className="text-muted mt-4 text-xs">No hay ingresos ni gastos en este periodo.</p>

@@ -36,9 +36,6 @@ export function ActivityPage() {
           </ButtonLink>
         }
       />
-      <p className="text-muted mb-4 text-sm">
-        Analiza la demanda de reservas por fecha de juego para tomar mejores decisiones.
-      </p>
       <div className="mb-3 flex flex-wrap items-end gap-3">
         <label className="text-muted grid gap-1 text-xs">
           Periodo
@@ -105,8 +102,8 @@ export function ActivityPage() {
       </div>
       <p className="text-muted mb-4 text-xs leading-relaxed">
         {dateLabel(from, { day: 'numeric', month: 'short', year: 'numeric' })} —{' '}
-        {dateLabel(to, { day: 'numeric', month: 'short', year: 'numeric' })} · Por fecha de juego,
-        incluidas reservas futuras. Estado actual; no reconstruye cambios anteriores.
+        {dateLabel(to, { day: 'numeric', month: 'short', year: 'numeric' })} · Incluye reservas
+        futuras
       </p>
       <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
         {[
@@ -121,11 +118,6 @@ export function ActivityPage() {
         ))}
       </div>
       <ActivityCharts report={report} />
-      <p className="text-muted mt-4 text-xs leading-relaxed">
-        Los recuentos no tienen en cuenta diferencias de horarios, cierres o capacidad disponible;
-        no son porcentajes de ocupación. Las reservas están incluidas en la cuota y no generan
-        ingresos por pista.
-      </p>
     </>
   )
 }

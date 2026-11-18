@@ -17,9 +17,7 @@ export function FiscalIssuerPanel({
     <Panel className="desktop:p-6 grid gap-4 p-5">
       <h2 className="text-sm">Datos fiscales del emisor</h2>
       <p id={descriptionId} className="text-muted text-xs leading-relaxed">
-        Completa los tres campos o déjalos todos vacíos. Solo se aplican a pagos nuevos; los
-        comprobantes ya emitidos conservan sus datos. Usa datos ficticios: la demo no emite facturas
-        con validez fiscal.
+        Usa datos ficticios. Completa los tres campos o déjalos vacíos. Solo afecta a pagos nuevos.
       </p>
       <label>
         Razón social
@@ -53,11 +51,6 @@ export function FiscalIssuerPanel({
           onChange={(event) => update('address', event.target.value)}
         />
       </label>
-      <p className="text-muted text-xs">
-        Incluye calle, número, código postal, localidad, provincia y país. El formato del NIF se
-        comprueba, no su titularidad. El tipo de IVA de las cuotas se configura en Contabilidad →
-        Parámetros.
-      </p>
     </Panel>
   )
 }

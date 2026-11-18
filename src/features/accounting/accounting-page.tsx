@@ -152,17 +152,13 @@ export function AccountingPage() {
           <TabsTrigger id="parameters">Parámetros</TabsTrigger>
         </TabsList>
         <TabsContent id="summary">
-          <div className="mb-3">
-            <h2 className="text-base font-semibold">Resumen financiero del club</h2>
-            <p className="text-muted mt-1 text-xs">Importes del periodo completo.</p>
-          </div>
+          <h2 className="mb-3 text-base font-semibold">Resumen financiero del club</h2>
           <div className="mb-4 grid gap-4 lg:grid-cols-2">
             <Panel>
               <RevenueChart rows={rows} from={from} to={to} />
             </Panel>
             <RankingChart
               title="Gastos por categoría"
-              description="Gasto contable por fecha de documento; las categorías menores se agrupan."
               items={chartCategories}
               format={money}
               empty="No hay gastos en este periodo."
@@ -170,11 +166,11 @@ export function AccountingPage() {
           </div>
           <div className="mb-4 grid gap-4 lg:grid-cols-2">
             <Panel className="p-4">
-              <h2 className="mb-3 text-sm">Cuotas recurrentes · mes actual</h2>
+              <h2 className="mb-3 text-sm">Cuotas</h2>
               <dl className="grid grid-cols-2 gap-3 text-sm">
                 <dt>Cuotas disponibles</dt>
                 <dd>{view!.settings.plans.length}</dd>
-                <dt>Socios al corriente</dt>
+                <dt>Socios al corriente este mes</dt>
                 <dd>
                   {current} / {members.length}
                 </dd>
@@ -191,10 +187,6 @@ export function AccountingPage() {
                 <dt>Cuotas cobradas del periodo</dt>
                 <dd>{money(totals.subscriptions)}</dd>
               </dl>
-              <p className="text-muted mt-3 text-xs">
-                La previsión y los socios al corriente corresponden al mes actual. Las cuotas
-                cobradas corresponden al periodo seleccionado. No hay cargos automáticos.
-              </p>
               <Link to="/pagos" className="mt-2 flex min-h-11 items-center text-sm underline">
                 Gestionar cuotas
               </Link>
@@ -217,12 +209,7 @@ export function AccountingPage() {
                   </div>
                 ))}
               </dl>
-              <p className="text-muted mt-4 text-xs">
-                DEMO · SIN VALIDEZ FISCAL. Resultado por fecha de documento, sin IVA recuperable; el
-                IVA no deducible forma parte del gasto. Saldo inicial más cobros menos pagos hasta
-                fin del periodo. Estado actual de los documentos, sin reconstrucción histórica de
-                anulaciones. Verifica tipos y deducciones con tu asesoría.
-              </p>
+              <p className="text-muted mt-4 text-xs">Demo · Sin validez fiscal</p>
             </Panel>
           </div>
           <ButtonLink to="/actividad" variant="secondary">
@@ -316,8 +303,7 @@ export function AccountingPage() {
               controls="accounting-movements"
             />
             <p className="text-muted px-4 pb-3 text-xs">
-              Las exportaciones incluyen todos los movimientos del periodo, sin los filtros de esta
-              lista.
+              El CSV no aplica los filtros de la lista.
             </p>
           </Panel>
         </TabsContent>

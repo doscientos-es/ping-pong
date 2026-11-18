@@ -115,7 +115,7 @@ export function ReservationDetail({
                 Añadir al calendario
               </LinkButton>
               <p className="text-muted text-xs">
-                El evento descargado no se actualiza si la reserva cambia o se cancela.
+                Los cambios y cancelaciones no se sincronizan con tu calendario.
               </p>
             </div>
           )}
@@ -129,10 +129,7 @@ export function ReservationDetail({
             {future && !cancelled && cancelStep ? (
               <div className="rounded-xl border border-[#efdfcd] bg-[#faf2e9] p-5">
                 <h3 className="text-sm font-semibold">¿Quieres cancelar esta reserva?</h3>
-                <p className="text-muted my-3 text-sm">
-                  La pista quedará libre para otro socio. La cancelación no modifica tu cuota ni
-                  genera cargos.
-                </p>
+                <p className="text-muted my-3 text-sm">No afecta a tu cuota.</p>
                 <InlineError>{command.error}</InlineError>
                 <div className="desktop:flex-row flex flex-col gap-2.5 [&>button]:flex-1">
                   <Button autoFocus disabled={command.busy} onClick={() => setCancelStep(false)}>

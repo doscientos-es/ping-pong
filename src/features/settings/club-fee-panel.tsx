@@ -21,8 +21,7 @@ export function ClubFeePanel({
     <Panel className="desktop:p-6 grid gap-4 p-5">
       <h2 className="text-sm">Cuotas del club</h2>
       <p className="text-muted text-xs leading-relaxed">
-        Cada usuario elige una cuota al darse de alta. Por ahora todas incluyen reservas ilimitadas.
-        Los cambios de precio solo se aplican a pagos nuevos; los periodos ya pagados no cambian.
+        Los cambios de precio solo se aplican a pagos nuevos.
       </p>
       {plans.map((plan, index) => (
         <fieldset key={plan.id} className="border-line grid min-w-0 gap-3 rounded-xl border p-4">

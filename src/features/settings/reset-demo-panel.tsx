@@ -14,10 +14,7 @@ export function ResetDemoPanel({ disabled }: { disabled: boolean }) {
   const reset = gateway.resetDemo
   return (
     <Panel className="mt-4 flex flex-wrap items-center justify-between gap-3 px-4 py-3">
-      <div>
-        <h2 className="text-sm font-semibold">Datos de demostración</h2>
-        <p className="text-muted mt-1 text-xs">Vuelve a empezar con ejemplos actualizados.</p>
-      </div>
+      <h2 className="text-sm font-semibold">Datos de demostración</h2>
       <Button ref={trigger} variant="secondary" disabled={disabled} onPress={() => setOpen(true)}>
         <RotateCcw aria-hidden="true" />
         Reiniciar demo
@@ -28,7 +25,7 @@ export function ResetDemoPanel({ disabled }: { disabled: boolean }) {
           onClose={() => !command.busy && setOpen(false)}
           returnFocusRef={trigger}
           title="¿Reiniciar la demo?"
-          description="Se sustituirán los socios, cuentas, reservas, pagos, ajustes y movimientos de este navegador por datos de ejemplo. No se puede deshacer."
+          description="Se sustituirán los datos del club en este navegador por datos de ejemplo. No se puede deshacer."
         >
           <InlineError>{command.error}</InlineError>
           <div className="mt-4 flex flex-wrap justify-end gap-2">
@@ -42,7 +39,7 @@ export function ResetDemoPanel({ disabled }: { disabled: boolean }) {
                 void command.run(async () => {
                   await reset(selectedId)
                   signOut()
-                }, 'Demo reiniciada. Ya puedes elegir un perfil de ejemplo.')
+                }, 'Demo reiniciada.')
               }
             >
               {command.busy ? 'Reiniciando…' : 'Reiniciar y sustituir datos'}

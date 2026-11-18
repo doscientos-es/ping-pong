@@ -79,8 +79,7 @@ export function BookingConfirmation({
         Añadir al calendario
       </LinkButton>
       <p className="text-muted text-xs">
-        Descarga el evento para añadirlo a tu calendario. Los cambios o cancelaciones no se
-        actualizan automáticamente.
+        Los cambios y cancelaciones no se sincronizan con tu calendario.
       </p>
       {admin ? (
         <Button className="w-full" onClick={onClose}>

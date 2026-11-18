@@ -43,11 +43,6 @@ export function AccountingSettings({ data }: { data: AccountingData }) {
             defaultValue={data.subscriptionVatBps / 100}
           />
         </label>
-        <p className="text-muted text-xs sm:col-span-2">
-          Saldo anterior al primer movimiento. El IVA de cuotas se guarda al registrar cada pago;
-          cambiarlo no modifica el historial. Los pagos antiguos se consideran sin IVA desglosado (0
-          %).
-        </p>
         <InlineError>{command.error}</InlineError>
         <Button type="submit" disabled={command.busy}>
           Guardar parámetros

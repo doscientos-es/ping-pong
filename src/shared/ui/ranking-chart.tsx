@@ -2,7 +2,6 @@ import { Panel } from './panel'
 
 export function RankingChart({
   title,
-  description,
   items,
   format = (value) => String(value),
   empty = 'No hay datos para este periodo.',
@@ -10,7 +9,6 @@ export function RankingChart({
   columns = 1,
 }: {
   title: string
-  description: string
   items: { label: string; value: number }[]
   format?: (value: number) => string
   empty?: string
@@ -21,7 +19,6 @@ export function RankingChart({
   return (
     <Panel className="p-4">
       <h3 className="text-sm font-semibold">{title}</h3>
-      <p className="text-muted mt-1 text-xs leading-relaxed">{description}</p>
       {max === 0 ? (
         <p className="text-muted py-8 text-center text-sm">{empty}</p>
       ) : (

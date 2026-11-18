@@ -1,4 +1,4 @@
-import { CreditCard, Receipt, SlidersHorizontal, Wallet, UserCheck } from 'lucide-react'
+import { Receipt, SlidersHorizontal, Wallet, UserCheck } from 'lucide-react'
 import { useId, useMemo, useState } from 'react'
 
 import { useClubClock } from '../../app/club-clock'
@@ -284,15 +284,6 @@ export function PaymentsPage() {
           </>
         )}
       </Panel>
-      {!admin && (
-        <Notice className="mt-5">
-          <CreditCard size={21} />
-          <span>
-            <strong>Pagos simulados.</strong> Las cuotas de esta demo son ficticias. Las reservas
-            están incluidas en la suscripción y no generan cargos adicionales.
-          </span>
-        </Notice>
-      )}
       {selected && <InvoiceDialog payment={selected} onClose={() => setSelected(null)} />}
       {paying && <SubscriptionDialog {...paying} onClose={() => setPaying(null)} />}
       {voiding && <VoidPaymentDialog payment={voiding} onClose={() => setVoiding(null)} />}

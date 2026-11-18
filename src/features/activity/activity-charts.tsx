@@ -9,11 +9,13 @@ function Highlight({ title, items, total }: { title: string; items: CountItem[];
     <div className="border-line rounded-xl border bg-white p-4">
       <p className="text-muted text-xs">{title}</p>
       <p className="mt-2 text-sm font-semibold">{top ? `${names}${more}` : 'Sin datos'}</p>
-      <p className="text-muted mt-1 text-xs">
-        {top
-          ? `${top.labels.length > 1 ? 'Empate · ' : ''}${top.value} reservas${top.labels.length > 1 ? ' por opción' : ''} · ${Math.round((top.value / total) * 100)}% del total`
-          : 'No hay reservas confirmadas'}
-      </p>
+      {top && (
+        <p className="text-muted mt-1 text-xs">
+          {top.value} {top.value === 1 ? 'reserva' : 'reservas'}
+          {top.labels.length > 1 ? ' por opción' : ''} · {Math.round((top.value / total) * 100)}%
+          del total
+        </p>
+      )}
     </div>
   )
 }
@@ -39,33 +41,12 @@ export function ActivityCharts({
         <Highlight title="Día y hora más reservados" items={report.slots} total={report.total} />
         <Highlight title="Pista con más reservas" items={report.courts} total={report.total} />
       </div>
-      <p className="text-muted mb-3 text-xs leading-relaxed">
-        Los colores y las barras comparan cada valor con el mayor de su gráfico: verde oscuro ≥75%,
-        verde claro ≥40% y ámbar por debajo. No representan ocupación ni rentabilidad.
-      </p>
       <div className="grid items-start gap-3 lg:grid-cols-2">
-        <RankingChart
-          title="Reservas por día"
-          description="Número de reservas confirmadas por día de la semana."
-          items={report.days}
-          relativeColors
-        />
-        <RankingChart
-          title="Reservas por hora"
-          description="Hora de inicio. Incluye el horario actual y franjas con reservas históricas."
-          items={report.hours}
-          relativeColors
-          columns={2}
-        />
-        <RankingChart
-          title="Reservas por pista"
-          description="Número de reservas confirmadas en cada pista."
-          items={report.courts}
-          relativeColors
-        />
+        <RankingChart title="Reservas por día" items={report.days} relativeColors />
+        <RankingChart title="Reservas por hora" items={report.hours} relativeColors columns={2} />
+        <RankingChart title="Reservas por pista" items={report.courts} relativeColors />
         <RankingChart
           title="Socios con más reservas"
-          description="Hasta 6 socios según los filtros seleccionados."
           items={report.people.slice(0, 6)}
           relativeColors
         />

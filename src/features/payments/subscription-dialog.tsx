@@ -35,7 +35,7 @@ export function SubscriptionDialog({
       open
       onClose={onClose}
       title={admin ? 'Registrar pago' : 'Activar suscripción'}
-      description={admin ? 'Anota un pago ya recibido. No se realizará ningún cobro.' : undefined}
+      description={admin ? 'No se realizará ningún cobro.' : undefined}
     >
       <div className="grid gap-5">
         {!admin && (
@@ -84,10 +84,7 @@ export function SubscriptionDialog({
           <>
             <Notice>
               <ShieldCheck size={21} />
-              <span>
-                <strong>Sin dinero real</strong>No se necesitan datos bancarios. Solo se registra un
-                pago ficticio para este periodo.
-              </span>
+              <strong>Sin dinero real</strong>
             </Notice>
             <details className="text-muted text-xs">
               <summary className="cursor-pointer py-1">Probar un pago rechazado</summary>
@@ -133,12 +130,6 @@ export function SubscriptionDialog({
               ? 'Registrar pago'
               : `Simular pago de ${money(quote)}`}
         </Button>
-        {!admin && (
-          <p className="text-muted text-xs leading-relaxed">
-            La cuota cubre el mes natural indicado. Las reservas no tienen coste adicional. No hay
-            renovación ni cobro automático en esta demo.
-          </p>
-        )}
       </div>
     </Modal>
   )

@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useClubClock } from '../../app/club-clock'
 import { useClub } from '../../app/club-context'
 import {
-  Badge,
   Button,
   Empty,
   ListFooter,
@@ -80,10 +79,7 @@ export function MembersPage() {
         </TabsList>
         <TabsContent id="members">
           <Panel>
-            <SectionHeading
-              title="Listado de socios"
-              action={<Badge tone="gray">Suscripción mensual al club</Badge>}
-            />
+            <SectionHeading title="Listado de socios" />
             <ListToolbar>
               <SearchField
                 aria-label="Buscar socios"
@@ -111,7 +107,6 @@ export function MembersPage() {
             )}
             <ListFooter>
               <span>{members.length} socios</span>
-              <span>Las bajas no eliminan el historial</span>
             </ListFooter>
           </Panel>
         </TabsContent>
