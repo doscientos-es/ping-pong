@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest'
+
 import { clubFixture } from '../../../test/club-fixture'
-import { decodeState } from '../../club/infrastructure/schema'
 import { createClubService } from '../../club/application/club-service'
 import { createLocalRepository, DATABASE_KEY } from '../../club/infrastructure/local-repository'
+import { decodeState } from '../../club/infrastructure/schema'
 import { financialRows, summarize } from '../domain/finance'
 import type { LedgerInput } from '../domain/model'
 
@@ -64,9 +65,9 @@ describe('casos de uso contables', () => {
     ])
   })
   it('incluye cada cuota una vez y congela su IVA aunque cambien los ajustes', async () => {
-    const { gateway, repository, subscription } = clubFixture(new Date(2026, 10, 17, 12))
+    const { gateway, repository, recordedSubscription } = clubFixture(new Date(2026, 10, 17, 12))
     await gateway.saveAccountingSettings('admin', 1000, 2100)
-    const paid = await gateway.paySubscription('admin', subscription)
+    const paid = await gateway.paySubscription('admin', recordedSubscription)
     await gateway.saveAccountingSettings('admin', 1000, 1000)
     const state = await repository.read()
     const rows = financialRows(state.accounting, state.payments)

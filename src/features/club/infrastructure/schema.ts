@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import type { ClubState } from '../domain/model'
+import { PAYMENT_METHODS } from '../domain/payment-methods'
 import { LEGACY_PLAN_ID, LEGACY_PLAN_NAME, requirePlan } from '../domain/plans'
 import { validateSettings } from '../domain/rules'
 
@@ -47,7 +48,7 @@ const schema = z.object({
       status: z.enum(['paid', 'voided']),
       paidAt: z.string(),
       voidedAt: z.string().optional(),
-      method: z.enum(['demo', 'manual']),
+      method: z.enum(PAYMENT_METHODS),
       invoiceNumber: z.string(),
       customer: z.object({
         name: z.string(),

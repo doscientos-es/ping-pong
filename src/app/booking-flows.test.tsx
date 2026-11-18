@@ -31,7 +31,7 @@ describe('reserva guiada y gestión con persistencia real', () => {
     expect(dialog).toHaveTextContent('18:00 – 19:00')
     expect(dialog).not.toHaveTextContent(/60\s*min/)
     await user.click(within(dialog).getByRole('button', { name: 'Cancelar reserva' }))
-    await user.click(within(dialog).getByRole('button', { name: 'Sí, cancelar' }))
+    await user.click(within(dialog).getByRole('button', { name: 'Sí, cancelar reserva' }))
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
     expect(screen.getByLabelText('Ir a una fecha')).toHaveValue(slot.date)
     expect(next()).toHaveTextContent('19:00 – 20:00')

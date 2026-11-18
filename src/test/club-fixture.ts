@@ -14,11 +14,12 @@ export function clubFixture(now = new Date()) {
   const repository = createLocalRepository(localStorage, () => structuredClone(seed))
   const gateway = createClubService(repository, () => now)
   const slot = { court: 1, date: addDays(dateKey(now), 1), hour: 18 }
-  const subscription = {
+  const subscriptionDetails = {
     memberId: 'hugo',
     period: periodKey(now),
     quotedCents: 3900,
-    paymentOutcome: 'success' as const,
   }
-  return { now, seed, repository, gateway, slot, subscription }
+  const subscription = { ...subscriptionDetails, paymentOutcome: 'success' as const }
+  const recordedSubscription = { ...subscriptionDetails, method: 'cash' as const }
+  return { now, seed, repository, gateway, slot, subscription, recordedSubscription }
 }

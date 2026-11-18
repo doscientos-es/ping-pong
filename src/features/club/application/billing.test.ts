@@ -23,7 +23,7 @@ describe('datos fiscales y persistencia compatible', () => {
   })
 
   it('persiste emisor/destinatario e IVA por pago sin alterar el historial al editar después', async () => {
-    const { gateway, repository, seed, subscription } = clubFixture()
+    const { gateway, repository, seed, recordedSubscription } = clubFixture()
     const member = seed.members.find((item) => item.id === 'hugo')!
     await gateway.saveSettings('admin', { ...seed.settings, issuer })
     await gateway.saveMember(
@@ -34,7 +34,7 @@ describe('datos fiscales y persistencia compatible', () => {
     await repository.transact((state) => {
       state.accounting.subscriptionVatBps = 2100
     })
-    const payment = await gateway.paySubscription('admin', subscription)
+    const payment = await gateway.paySubscription('admin', recordedSubscription)
     expect(payment).toMatchObject({
       issuer,
       customer: {

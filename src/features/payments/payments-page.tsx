@@ -4,7 +4,7 @@ import { useId, useMemo, useState } from 'react'
 import { useClubClock } from '../../app/club-clock'
 import { useClub } from '../../app/club-context'
 import { emptyDateRange, withinDateRange } from '../../shared/date-range'
-import { money } from '../../shared/format'
+import { money, periodLabel } from '../../shared/format'
 import {
   Badge,
   Button,
@@ -37,12 +37,14 @@ export function PaymentsPage() {
   const { view } = useClub()
   const now = useClubClock()
   const admin = view!.actor.role === 'admin'
+  const currentPeriod = periodKey(now)
+  const subscriptionActive = view!.subscriptionActive
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('all')
-  const [month, setMonth] = useState(periodKey(now))
+  const [month, setMonth] = useState(subscriptionActive ? currentPeriod : '')
   const [tab, setTab] = useState('subscriptions')
   const [selected, setSelected] = useState<Payment | null>(null)
-  const [paying, setPaying] = useState<string | null>(null)
+  const [paying, setPaying] = useState<{ memberId: string; period: string } | null>(null)
   const [voiding, setVoiding] = useState<Payment | null>(null)
   const [range, setRange] = useState(emptyDateRange)
   const [subscriptionFilters, setSubscriptionFilters] = useState<SubscriptionFilters>({
@@ -199,6 +201,17 @@ export function PaymentsPage() {
   return (
     <>
       <PageHeading title={admin ? 'Cuotas del club' : 'Mis pagos'} />
+      {!subscriptionActive && (
+        <Notice warning className="mb-3 flex-wrap">
+          <span className="flex-1">
+            <strong>Cuota pendiente · {periodLabel(currentPeriod)}</strong>
+            <span className="block">Actívala para hacer nuevas reservas.</span>
+          </span>
+          <Button onPress={() => setPaying({ memberId: view!.actor.id, period: currentPeriod })}>
+            Activar suscripción · pago simulado
+          </Button>
+        </Notice>
+      )}
       <StatsGrid>
         <Stat
           label={admin ? 'Cuotas registradas' : 'Pagado (simulado)'}
@@ -207,7 +220,13 @@ export function PaymentsPage() {
         />
         <Stat
           label={admin ? 'Socios al día en el periodo' : 'Tu suscripción'}
-          value={admin ? `${paidMembers} / ${members.length}` : 'Activa'}
+          value={
+            admin
+              ? `${paidMembers} / ${members.length}`
+              : subscriptionActive
+                ? 'Activa'
+                : 'Pendiente'
+          }
           icon={UserCheck}
         />
         <Stat label="Comprobantes" value={payments.length} icon={Receipt} />
@@ -243,7 +262,7 @@ export function PaymentsPage() {
                   filtersOpen={openFilters.subscriptions}
                   filtersId={subscriptionFiltersId}
                   onClearSearch={() => setSearch('')}
-                  onPay={setPaying}
+                  onPay={(memberId) => setPaying({ memberId, period: month })}
                   onVoid={setVoiding}
                 />
               ) : (
@@ -265,17 +284,17 @@ export function PaymentsPage() {
           </>
         )}
       </Panel>
-      <Notice className="mt-5">
-        <CreditCard size={21} />
-        <span>
-          <strong>Pagos simulados.</strong> Las cuotas de esta demo son ficticias. Las reservas
-          están incluidas en la suscripción y no generan cargos adicionales.
-        </span>
-      </Notice>
-      {selected && <InvoiceDialog payment={selected} onClose={() => setSelected(null)} />}
-      {paying && month && (
-        <SubscriptionDialog memberId={paying} period={month} onClose={() => setPaying(null)} />
+      {!admin && (
+        <Notice className="mt-5">
+          <CreditCard size={21} />
+          <span>
+            <strong>Pagos simulados.</strong> Las cuotas de esta demo son ficticias. Las reservas
+            están incluidas en la suscripción y no generan cargos adicionales.
+          </span>
+        </Notice>
       )}
+      {selected && <InvoiceDialog payment={selected} onClose={() => setSelected(null)} />}
+      {paying && <SubscriptionDialog {...paying} onClose={() => setPaying(null)} />}
       {voiding && <VoidPaymentDialog payment={voiding} onClose={() => setVoiding(null)} />}
     </>
   )

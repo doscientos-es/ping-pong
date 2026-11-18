@@ -2,7 +2,7 @@ import { ArrowRight, Clock3 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import { CourtArt } from '../../../shared/court-art'
-import { compareReservations, dateLabel, hourLabel, money } from '../../../shared/format'
+import { compareReservations, dateLabel, hourLabel } from '../../../shared/format'
 import { Button, Panel } from '../../../shared/ui'
 import type { ClubView, Reservation } from '../../club/domain/model'
 import { requirePlan } from '../../club/domain/plans'
@@ -75,12 +75,9 @@ export function CalendarAside({
     >
       <NextReservation reservation={next} onDetail={onDetail} />
       <section className="border-line bg-accent-soft desktop:block hidden rounded-xl border p-4">
-        <h2 className="text-sm">Cuota mensual</h2>
+        <h2 className="text-sm">Tu plan</h2>
         <p className="text-muted mt-1 text-xs">{plan.name}</p>
-        <p className="text-green mt-2 text-lg font-semibold">
-          {money(plan.priceCents)} <span className="text-muted text-xs font-normal">/ mes</span>
-        </p>
-        <p className="text-muted mt-1 text-xs">Reservas ilimitadas incluidas.</p>
+        <p className="text-green mt-2 text-lg font-semibold">Reservas ilimitadas</p>
         <CourtArt className="mx-auto mt-2 h-28 w-full" />
       </section>
     </aside>

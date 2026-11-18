@@ -4,6 +4,7 @@ import { useClubClock } from '../../../app/club-clock'
 import { useClub } from '../../../app/club-context'
 import { Panel } from '../../../shared/ui'
 import type { Reservation } from '../../club/domain/model'
+import { SubscriptionGate } from '../../payments/subscription-gate'
 import { BookingFlowLoader } from '../booking-flow-loader'
 import { ReservationDetail } from '../reservation-detail'
 import { AdminCalendar } from './admin-calendar'
@@ -15,6 +16,7 @@ export function CalendarPage() {
   const now = useClubClock()
   const [detail, setDetail] = useState<Reservation | null>(null)
   const admin = view!.actor.role === 'admin'
+  if (!view!.subscriptionActive) return <SubscriptionGate />
   return (
     <>
       {admin ? (

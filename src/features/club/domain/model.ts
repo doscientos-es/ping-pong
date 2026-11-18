@@ -1,5 +1,6 @@
 import type { AccountingData } from '../../accounting/domain/model'
 import type { LocalCredential } from '../../session/domain/accounts'
+import type { PaymentMethod, RecordedPaymentMethod } from './payment-methods'
 
 export const COURTS = Array.from({ length: 8 }, (_, i) => i + 1)
 export const WEEKDAYS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
@@ -36,7 +37,7 @@ export interface Payment {
   status: 'paid' | 'voided'
   paidAt: string
   voidedAt?: string
-  method: 'demo' | 'manual'
+  method: PaymentMethod
   invoiceNumber: string
   customer: { name: string; email: string; dni?: string; address?: string }
   issuer?: FiscalIssuer
@@ -117,10 +118,12 @@ export interface ManagedBookingInput extends BookingInput {
   memberId: string
 }
 
-export interface SubscriptionInput {
+export type SubscriptionInput = {
   memberId: string
   period: string
   quotedCents: number
   planId?: string
-  paymentOutcome: 'success' | 'failure'
-}
+} & (
+  | { method: RecordedPaymentMethod; paymentOutcome?: never }
+  | { paymentOutcome: 'success' | 'failure'; method?: never }
+)

@@ -57,7 +57,7 @@ describe('actualizaciones recibidas de otra pestaña (eventos simulados)', () =>
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
 
-  it('bloquea el acceso al anular la cuota actual desde otra pestaña sin cambiar de perfil', async () => {
+  it('bloquea nuevas reservas al anular la cuota actual desde otra pestaña sin cambiar de perfil', async () => {
     const { gateway, seed, now } = clubFixture()
     render(<App gateway={gateway} />)
     await screen.findByLabelText('Ir a una fecha')

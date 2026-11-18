@@ -5,7 +5,7 @@ const memberSteps = [
   {
     title: 'Reservar pista',
     description:
-      'Elige día, hora y pista disponible. Necesitas tener activa la cuota del mes de la reserva.',
+      'Elige día, hora y pista disponible. Para reservar necesitas tener pagada la cuota del mes en curso, aunque reserves para más adelante.',
   },
   {
     title: 'Mis reservas e historial',

@@ -1,5 +1,7 @@
 import { vatCents } from '../accounting/domain/finance'
 import type { Payment } from '../club/domain/model'
+import { isRecordedPaymentMethod } from '../club/domain/payment-methods'
+import { paymentMethodLabels } from './payment-method-labels'
 
 /** Only persisted payment data: never rebuild an old document from current settings. */
 export function invoiceDetails(payment: Payment) {
@@ -14,6 +16,8 @@ export function invoiceDetails(payment: Payment) {
   ].filter((value): value is string => typeof value === 'string')
   const taxCents =
     payment.vatBps === undefined ? undefined : vatCents(payment.amountCents, payment.vatBps)
+  const recorded = isRecordedPaymentMethod(payment.method)
+  const status = payment.status === 'voided' ? 'Anulado' : 'Pagado'
   return {
     missing,
     taxCents,
@@ -23,8 +27,8 @@ export function invoiceDetails(payment: Payment) {
         ? 'No consta'
         : `${new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2 }).format(payment.vatBps / 100)} %`,
     issuedOn: new Date(payment.paidAt).toLocaleDateString('es-ES'),
-    status: payment.status === 'voided' ? 'ANULADO (SIMULADO)' : 'PAGADO (SIMULADO)',
-    badge: payment.status === 'voided' ? 'Anulado · demo' : 'Pagado · demo',
-    method: payment.method === 'manual' ? 'Registro manual' : 'Pago simulado',
+    status: `${status.toUpperCase()}${recorded ? '' : ' (SIMULADO)'}`,
+    badge: recorded ? status : `${status} · demo`,
+    method: paymentMethodLabels[payment.method],
   }
 }

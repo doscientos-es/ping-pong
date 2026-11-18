@@ -12,6 +12,7 @@ import {
 import { ClosedDatesPanel } from './closed-dates-panel'
 import { ClubFeePanel } from './club-fee-panel'
 import { FiscalIssuerPanel } from './fiscal-issuer-panel'
+import { ResetDemoPanel } from './reset-demo-panel'
 import { SettingsSaveBar } from './settings-save-bar'
 import { useSettingsDraft } from './use-settings-draft'
 import { WeeklySchedulePanel } from './weekly-schedule-panel'
@@ -82,6 +83,7 @@ export function SettingsPage() {
           </TabsContent>
         </fieldset>
       </Tabs>
+      <ResetDemoPanel disabled={command.busy} />
       <SettingsSaveBar
         changed={changed}
         conflicted={conflicted}

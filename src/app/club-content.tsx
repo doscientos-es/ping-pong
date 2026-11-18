@@ -1,7 +1,5 @@
 import { ArrowRightLeft, LockKeyhole } from 'lucide-react'
-import { useLocation } from 'react-router-dom'
 
-import { SubscriptionGate } from '../features/payments/subscription-gate'
 import { Button } from '../shared/ui'
 import { AppRoutes } from './app-routes'
 import { useClub } from './club-context'
@@ -9,7 +7,6 @@ import { useClub } from './club-context'
 export function ClubContent({ onSwitchProfile }: { onSwitchProfile: () => void }) {
   const { view, profiles, selectedId, loading, error } = useClub()
   const actor = profiles.find((profile) => profile.id === selectedId)
-  const { pathname } = useLocation()
   if (loading)
     return (
       <div className="grid place-items-center gap-6 px-5 py-20 text-center" role="status">
@@ -34,7 +31,5 @@ export function ClubContent({ onSwitchProfile }: { onSwitchProfile: () => void }
         </p>
       </section>
     )
-  if (!view.subscriptionActive && pathname !== '/cuenta')
-    return <SubscriptionGate key={selectedId} />
   return <AppRoutes key={selectedId} role={view.actor.role} />
 }

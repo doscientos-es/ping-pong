@@ -3,7 +3,8 @@ import { createAccountService } from '../../session/application/account-service'
 import { localPasswords } from '../../session/infrastructure/passwords'
 import { normalizeIssuer } from '../domain/billing'
 import { createMember } from '../domain/member'
-import type { BookingInput, ClubSettings, Reservation } from '../domain/model'
+import type { BookingInput, ClubSettings, ClubState, Payment, Reservation } from '../domain/model'
+import { isRecordedPaymentMethod } from '../domain/payment-methods'
 import { requirePlan } from '../domain/plans'
 import {
   requireSubscription,
@@ -20,6 +21,7 @@ import type { ClubGateway, ClubRepository } from './ports'
 export function createClubService(
   repository: ClubRepository,
   clock = () => new Date(),
+  demoSeed?: (now: Date) => ClubState,
 ): ClubGateway {
   const newReservation = (input: BookingInput, memberId: string): Reservation => ({
     id: crypto.randomUUID(),
@@ -36,6 +38,13 @@ export function createClubService(
     ...createAccountService(repository, clock, localPasswords),
     ...createClubQueries(repository, clock),
     subscribe: (listener) => repository.subscribe(listener),
+    ...(demoSeed && {
+      resetDemo: (actorId: string) =>
+        repository.transact((state) => {
+          requireActor(state, actorId, true)
+          Object.assign(state, demoSeed(clock()))
+        }),
+    }),
     register(input) {
       return repository.transact((state) => {
         const member = createMember(input, state, clock())
@@ -85,7 +94,6 @@ export function createClubService(
     cancel(actorId, reservationId) {
       return repository.transact((state) => {
         const actor = requireActor(state, actorId)
-        if (actor.role !== 'admin') requireSubscription(state, actorId, clock())
         const reservation = state.reservations.find((item) => item.id === reservationId)
         if (!reservation || (actor.role !== 'admin' && reservation.memberId !== actorId))
           throw new Error('No puedes cancelar esta reserva.')
@@ -118,20 +126,26 @@ export function createClubService(
           (input.planId !== undefined && input.planId !== plan.id)
         )
           throw new Error('La cuota ha cambiado. Revisa el importe antes de confirmar.')
-        if (input.paymentOutcome !== 'success')
+        let method: Payment['method'] = 'demo'
+        if (actor.role === 'admin') {
+          if (!isRecordedPaymentMethod(input.method))
+            throw new Error('Selecciona un método de pago.')
+          method = input.method
+        } else if (input.paymentOutcome !== 'success') {
           throw new Error(
             'Pago simulado rechazado. Tu cuota sigue pendiente y no se ha cobrado nada.',
           )
-        const payment = {
+        }
+        const payment: Payment = {
           id: crypto.randomUUID(),
           memberId: member.id,
           period: input.period,
           amountCents: plan.priceCents,
           plan: { id: plan.id, name: plan.name },
           vatBps: state.accounting.subscriptionVatBps,
-          status: 'paid' as const,
+          status: 'paid',
           paidAt: clock().toISOString(),
-          method: actor.role === 'admin' ? ('manual' as const) : ('demo' as const),
+          method,
           invoiceNumber: `DEMO-${clock().getFullYear()}-${String(state.payments.length + 1).padStart(5, '0')}`,
           customer: {
             name: member.name,

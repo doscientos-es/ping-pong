@@ -118,6 +118,11 @@ Usar un perfil de navegador de prueba para no tocar datos de otras demos.
 - [ ] Activar movimiento reducido y comprobar que el asistente sigue siendo usable.
 - [ ] Como administrador, crear/reprogramar/cancelar y editar/copiar/descartar horarios.
 - [ ] Probar perfil de baja, cuota pendiente, rechazo de pago y alta de cuenta local.
+- [ ] Con cuota pendiente, comprobar que no se puede crear una reserva, pero sí cancelar
+      una próxima y consultar historial y comprobantes propios.
+- [ ] En un perfil de navegador desechable, abrir **Configuración → Reiniciar demo**.
+      Conservar primero los datos y comprobar que no cambian; después confirmar el
+      reinicio y verificar selección de perfil, dos cuotas, reservas y gastos de ejemplo.
 - [ ] Invitar un socio y un administrador, entrar con contraseña temporal y cambiarla
       desde Ajustes de cuenta sin necesidad de tener cuota pagada.
 - [ ] Guardar el código de recuperación, cerrar sesión y recuperar con él; comprobar
@@ -163,7 +168,8 @@ para instalar y probar offline en un móvil físico, hace falta un origen HTTPS.
 - [ ] Reservar la misma pista/franja casi a la vez: solo una confirma; la otra
       muestra el conflicto y permite elegir otra pista.
 - [ ] Cancelar una reserva y comprobar que se libera en la otra pestaña sin recargar.
-- [ ] Anular la cuota de Alba desde administración: su pestaña pierde acceso.
+- [ ] Anular la cuota de Alba desde administración: su pestaña deja de permitir
+      nuevas reservas, pero conserva el acceso a sus reservas y comprobantes.
 - [ ] Abrir Configuración en ambas: un cambio guardado actualiza la pestaña sin
       editar. Si tiene borrador, se conserva, se avisa y no se permite sobrescribirlo.
 - [ ] Pulsar «Descartar» en el conflicto y comprobar que se cargan los ajustes actuales.

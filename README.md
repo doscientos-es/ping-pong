@@ -35,11 +35,16 @@ cambiar de perfil y cerrar sesión sin borrar los datos del club.
 Los datos iniciales se generan tomando como referencia la fecha del primer
 arranque. Al pasar de mes, las cuotas caducan de verdad: no hay renovación
 automática ni se regeneran datos para aparentar pagos.
+Los ejemplos incluyen dos cuotas, distintas franjas de demanda, cancelaciones
+y gastos de varios meses. Los datos fiscales del club y de los socios son
+ficticios; los comprobantes de ejemplo ya incluyen emisor, destinatario, IVA y
+método de pago. Administración puede regenerar estos datos desde
+**Configuración → Datos de demostración → Reiniciar demo**.
 
 ## Suscripciones y reservas
 
-- Cuota inicial: **Cuota general · 39 €/mes natural**. Administración puede crear
-  varias cuotas con nombre y precio en **Configuración → Cuotas**.
+- Cuotas de ejemplo: **Cuota general · 39 €/mes** y **Cuota reducida · 29 €/mes**.
+  Administración puede crear varias cuotas con nombre y precio en **Configuración → Cuotas**.
 - **Nuevo socio**, **Invitar usuario** y el registro **Crear cuenta local** permiten
   elegir cuota. El selector muestra nombre e importe mensual; la primera aparece
   preseleccionada. Administración puede cambiarla desde la ficha del socio.
@@ -54,8 +59,10 @@ automática ni se regeneran datos para aparentar pagos.
 - Debe quedar al menos una cuota, con nombres únicos e importes entre 1 y 1.000 €.
   Solo pueden eliminarse cuotas sin usuarios asignados, incluidos usuarios de baja
   y administradores. Los administradores no necesitan pagar cuota para acceder.
-- La cuota del mes actual habilita el acceso y la creación de reservas futuras,
-  incluso de fechas de otros meses, según disponibilidad. No hay cupo por socio.
+- La cuota del mes actual habilita nuevas reservas, incluso para fechas de otros
+  meses, según disponibilidad. Con la cuota pendiente, los socios activos pueden
+  consultar sus reservas, historial y comprobantes y cancelar reservas propias
+  antes del inicio. No hay cupo por socio.
 - Cada reserva ocupa una pista durante una hora. No genera un pago adicional.
 - Reserva guiada: **día → hora → pista libre → confirmar**. Puedes volver atrás o
   cambiar cualquier dato desde el resumen. Las horas completas y pistas ocupadas
@@ -70,8 +77,9 @@ automática ni se regeneran datos para aparentar pagos.
 - Si otra pestaña modifica los ajustes mientras editas, se conserva tu borrador y
   se bloquea el guardado obsoleto. **Descartar** carga los ajustes actuales.
 - Cancelar antes del inicio libera la pista y no modifica la cuota.
-- En Pagos, el administrador elige periodo y registra o anula cuotas; anular
-  conserva el comprobante y, si es del mes actual, bloquea acceso al socio.
+- En Pagos, administración elige el periodo y registra los cobros ya recibidos,
+  indicando si se pagó en efectivo, por transferencia, con tarjeta o por Bizum.
+  Anular conserva el comprobante y, si es del mes actual, impide nuevas reservas.
 - Cambiar horarios o dar de baja a alguien no cancela sus reservas automáticamente.
   El calendario conserva reservas fuera del horario y permite reprogramarlas o cancelarlas.
 - Tras confirmar una reserva se puede descargar un archivo de calendario `.ics`.
@@ -215,9 +223,9 @@ Usar la URL mostrada por Vite. Servir siempre en la raíz del dominio.
 - Las horas corresponden al huso local del dispositivo.
 - Se pueden probar todos los roles; esto **no es autenticación ni seguridad real**.
   La autorización de producción debe ejecutarse en servidor.
-- Para empezar de cero, cerrar otras pestañas y eliminar únicamente las claves
-  `spin-club:database:v2`, `spin-club:profile` y `spin-club:session:v1` desde el almacenamiento del sitio.
-  Esto elimina los cambios locales de la demo y vuelve a generar los ejemplos.
+- El reinicio de la demo requiere confirmación. Sustituye los datos locales del club
+  por nuevos ejemplos y cierra la sesión. No se puede deshacer, no borra otros datos
+  del navegador y no se ejecuta al actualizar la app.
 - La marca es Doscientos Club. Las claves internas anteriores y el evento de
   sincronización se conservan por compatibilidad: renombrarlos perdería el acceso
   a los datos existentes. No se modifican socios, pagos ni comprobantes guardados.

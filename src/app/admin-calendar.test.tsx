@@ -24,15 +24,16 @@ describe('cabecera del calendario de administración', () => {
     expect(
       screen.queryByRole('complementary', { name: 'Información del club' }),
     ).not.toBeInTheDocument()
-    expect(screen.queryByText('Reservas ilimitadas incluidas.')).not.toBeInTheDocument()
+    expect(screen.queryByText('Reservas ilimitadas')).not.toBeInTheDocument()
   })
 
-  it('mantiene la información de cuota para los socios', async () => {
+  it('muestra las reservas incluidas en el plan del socio sin el precio', async () => {
     const { gateway } = clubFixture()
     render(<App gateway={gateway} />)
     const information = await screen.findByRole('complementary', { name: 'Información del club' })
     expect(within(information).getByText('Cuota general')).toBeInTheDocument()
-    expect(within(information).getByText('Reservas ilimitadas incluidas.')).toBeInTheDocument()
+    expect(within(information).getByText('Reservas ilimitadas')).toBeInTheDocument()
+    expect(information).not.toHaveTextContent('€')
   })
 
   it('presenta un único título y agrupa las acciones sin la descripción anterior', async () => {

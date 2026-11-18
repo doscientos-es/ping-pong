@@ -152,8 +152,8 @@ describe('cuotas mensuales e históricos', () => {
   })
 
   it('un pago de otro periodo no activa el actual y el cambio de mes caduca el acceso', async () => {
-    const { gateway, repository, subscription } = fixture()
-    await gateway.paySubscription('admin', { ...subscription, period: '2026-12' })
+    const { gateway, repository, recordedSubscription } = fixture()
+    await gateway.paySubscription('admin', { ...recordedSubscription, period: '2026-12' })
     expect((await gateway.view('hugo')).subscriptionActive).toBe(false)
     const december = createClubService(repository, () => new Date(2026, 11, 1, 12))
     expect((await december.view('hugo')).subscriptionActive).toBe(true)
@@ -161,13 +161,13 @@ describe('cuotas mensuales e históricos', () => {
   })
 
   it('anular conserva documentos y reservas, bloquea acceso y permite registrar un nuevo pago', async () => {
-    const { gateway, repository, subscription, slot } = fixture()
-    const payment = await gateway.paySubscription('admin', subscription)
+    const { gateway, repository, recordedSubscription, slot } = fixture()
+    const payment = await gateway.paySubscription('admin', recordedSubscription)
     await gateway.book('hugo', slot)
     await expect(gateway.voidPayment('alba', payment.id)).rejects.toThrow('administración')
     await gateway.voidPayment('admin', payment.id)
     expect((await gateway.view('hugo')).subscriptionActive).toBe(false)
-    const replacement = await gateway.paySubscription('admin', subscription)
+    const replacement = await gateway.paySubscription('admin', recordedSubscription)
     expect(replacement.invoiceNumber).not.toBe(payment.invoiceNumber)
     const state = await repository.read()
     expect(state.reservations).toHaveLength(1)
@@ -178,7 +178,7 @@ describe('cuotas mensuales e históricos', () => {
   })
 
   it('valida importe, periodo, titular y estado de la cuenta antes de pagar', async () => {
-    const { gateway, repository, subscription, seed } = fixture()
+    const { gateway, repository, subscription, recordedSubscription, seed } = fixture()
     await expect(
       gateway.paySubscription('hugo', { ...subscription, quotedCents: 1 }),
     ).rejects.toThrow('ha cambiado')
@@ -189,7 +189,7 @@ describe('cuotas mensuales e históricos', () => {
       'propia suscripción',
     )
     await expect(
-      gateway.paySubscription('admin', { ...subscription, memberId: 'elena' }),
+      gateway.paySubscription('admin', { ...recordedSubscription, memberId: 'elena' }),
     ).rejects.toThrow('Reactiva')
     expect(await repository.read()).toEqual(seed)
   })

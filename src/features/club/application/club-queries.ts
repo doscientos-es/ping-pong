@@ -60,12 +60,12 @@ export function createClubQueries(repository: ClubRepository, clock: () => Date)
         actor,
         subscriptionActive,
         members: admin ? state.members : [actor],
-        // Occupancy is public to active profiles; other players' identities are not.
+        // Members retain their own reservations even when new bookings are blocked.
         reservations: subscriptionActive
           ? state.reservations.map((item) =>
               admin || item.memberId === actorId ? item : { ...item, memberId: 'occupied' },
             )
-          : [],
+          : state.reservations.filter((item) => item.memberId === actorId),
         payments: state.payments.filter((item) => admin || item.memberId === actorId),
         settings: state.settings,
         ...(admin ? { accounting: state.accounting } : {}),

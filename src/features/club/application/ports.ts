@@ -44,5 +44,6 @@ export interface ClubGateway extends AccountingGateway, AccountGateway {
   setMemberPlan(actorId: string, memberId: string, planId: string): Promise<void>
   setMemberActive(actorId: string, memberId: string, active: boolean): Promise<void>
   saveSettings(actorId: string, settings: ClubSettings, expected?: ClubSettings): Promise<void>
+  resetDemo?(actorId: string): Promise<void>
   subscribe(listener: () => void): () => void
 }

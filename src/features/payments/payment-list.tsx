@@ -5,6 +5,7 @@ import { dateLabel, money, periodLabel } from '../../shared/format'
 import { Badge, Button } from '../../shared/ui'
 import type { Payment } from '../club/domain/model'
 import { dateKey } from '../club/domain/rules'
+import { paymentMethodLabels } from './payment-method-labels'
 
 export function PaymentList({
   payments,
@@ -39,8 +40,7 @@ export function PaymentList({
               {admin ? payment.customer.name : `Suscripción · ${periodLabel(payment.period)}`}
             </strong>
             <span className="text-muted desktop:text-[13px] text-xs">
-              {periodLabel(payment.period)} ·{' '}
-              {payment.method === 'manual' ? 'Registro manual' : 'Pago simulado'}
+              {periodLabel(payment.period)} · {paymentMethodLabels[payment.method]}
             </span>
             <small className="text-muted text-xs break-words">{payment.invoiceNumber}</small>
             <small className="text-muted text-xs">

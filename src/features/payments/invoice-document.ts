@@ -29,7 +29,7 @@ export function invoiceMarkup(payment: Payment): string {
   <dl class="metadata">
     <div><dt>Fecha de emisión / pago</dt><dd>${safe(details.issuedOn)}</dd></div>
     <div><dt>Periodo del servicio</dt><dd>${safe(periodLabel(payment.period))}</dd></div>
-    <div><dt>Método de registro</dt><dd>${details.method}</dd></div>
+    <div><dt>Método de pago</dt><dd>${safe(details.method)}</dd></div>
   </dl>
 </section>
 <div class="parties">
@@ -65,7 +65,7 @@ ${payment.voidedAt ? `<p class="secondary">Registro de pago anulado el ${safe(ne
 ${details.missing.length ? `<aside class="warning" aria-label="Datos fiscales incompletos"><strong>Datos fiscales incompletos.</strong> No constaban al emitir el documento: ${safe(details.missing.join(', '))}. Completa los datos para próximos pagos; el historial no se modifica.</aside>` : ''}
 <footer class="invoice-footer">
   <p><strong>DEMO · SIN VALIDEZ FISCAL</strong></p>
-  <p>No se ha realizado ningún cobro real. Los datos de facturación reflejan el momento del pago de la cuota.</p>
+  <p>La aplicación no procesa cobros. Los datos de facturación reflejan el momento en que se registró el pago.</p>
   <p>Documento ficticio. El desglose de IVA es orientativo; un tipo del 0 % no acredita una exención tributaria. No es una factura de venta real ni un documento rectificativo.</p>
 </footer>`
 }
