@@ -64,7 +64,7 @@ export function BookingDatePicker({
       <DateToolbar date={date} today={today} min={today} onChange={onChange} className="pb-2" />
       <div
         ref={dayRail}
-        className="desktop:gap-1.5 relative grid auto-cols-[minmax(44px,1fr)] grid-flow-col gap-1 overflow-x-auto overscroll-x-contain p-1"
+        className="desktop:gap-1.5 relative grid w-full auto-cols-[minmax(44px,1fr)] grid-flow-col gap-1 overflow-x-auto overscroll-x-contain p-1"
         aria-label="Elige un día"
       >
         {days.map(({ day, count, closed }) => {

@@ -68,10 +68,10 @@ export function DateToolbar({
             Hoy
           </Button>
         )}
-        <label className="bg-canvas focus-within:outline-green-mid desktop:size-9 relative grid size-11 cursor-pointer place-items-center rounded-lg focus-within:outline-3 focus-within:outline-offset-2">
+        <label className="bg-canvas focus-within:outline-green-mid desktop:size-9 relative grid size-11 cursor-pointer place-items-center overflow-hidden rounded-lg focus-within:outline-3 focus-within:outline-offset-2">
           <CalendarDays size={17} />
           <input
-            className="absolute inset-0 size-full min-h-0 cursor-pointer opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:size-auto [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+            className="absolute inset-0 size-full min-h-0 max-w-full cursor-pointer border-0 p-0 opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:size-auto [&::-webkit-calendar-picker-indicator]:cursor-pointer"
             aria-label="Ir a una fecha"
             type="date"
             min={min}

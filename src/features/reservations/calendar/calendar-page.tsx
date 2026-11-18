@@ -24,7 +24,7 @@ export function CalendarPage() {
       ) : (
         <>
           <ClubWelcome admin={admin} />
-          <div className="wide:grid-cols-[minmax(0,1fr)_248px] wide:gap-4 grid items-start gap-3">
+          <div className="wide:grid-cols-[minmax(0,1fr)_248px] wide:gap-4 grid grid-cols-1 items-start gap-3">
             <Panel className="desktop:px-4 desktop:pt-4 min-w-0 px-3 pt-3">
               <BookingFlowLoader />
             </Panel>
