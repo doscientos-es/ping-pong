@@ -2,6 +2,8 @@ import { CLUB_NAME } from '../../shared/brand'
 import type { Reservation } from '../club/domain/model'
 import { startTime } from '../club/domain/rules'
 
+export const CALENDAR_INVITE_FILENAME = 'reserva-perception.ics'
+
 export interface CalendarEvent {
   reservationId: string
   court: number
@@ -61,10 +63,11 @@ export function createCalendarInvite(
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Doscientos Club//Reservas//ES',
+    `PRODID:-//${CLUB_NAME}//Reservas//ES`,
     'CALSCALE:GREGORIAN',
     `METHOD:${method}`,
     'BEGIN:VEVENT',
+    // Keep the previous UID namespace so imported events are not duplicated.
     `UID:${encodeURIComponent(event.reservationId)}@doscientos.club`,
     `DTSTAMP:${utc(event.createdAt)}`,
     `DTSTART:${utc(event.startsAt)}`,

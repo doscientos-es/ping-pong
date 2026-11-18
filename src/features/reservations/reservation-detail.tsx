@@ -18,7 +18,7 @@ import type { Reservation } from '../club/domain/model'
 import { startTime } from '../club/domain/rules'
 import { downloadInvoice } from '../payments/invoice-document'
 import { BookingDialog } from './booking-dialog'
-import { calendarEventFor, createCalendarInvite } from './calendar-invite'
+import { CALENDAR_INVITE_FILENAME, calendarEventFor, createCalendarInvite } from './calendar-invite'
 
 export function ReservationDetail({
   reservation,
@@ -107,7 +107,7 @@ export function ReservationDetail({
             <div className="grid gap-2">
               <LinkButton
                 href={`data:text/calendar;charset=utf-8,${encodeURIComponent(createCalendarInvite(calendarEventFor(current)))}`}
-                download="reserva-doscientos-club.ics"
+                download={CALENDAR_INVITE_FILENAME}
                 variant="outline"
                 className="max-desktop:min-h-11 w-full"
               >

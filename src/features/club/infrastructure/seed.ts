@@ -1,3 +1,4 @@
+import { CLUB_NAME } from '../../../shared/brand'
 import type { LedgerEntry } from '../../accounting/domain/model'
 import {
   COURTS,
@@ -13,11 +14,60 @@ import { LEGACY_PLAN_ID, LEGACY_PLAN_NAME } from '../domain/plans'
 import { addDays, dateKey, startTime } from '../domain/rules'
 
 const DEMO_ISSUER: FiscalIssuer = {
-  legalName: 'Doscientos Club Demo, S. L.',
+  legalName: `${CLUB_NAME} Demo, S. L.`,
   nif: 'B00000000',
   address: 'Avenida de Ejemplo, 8, 17001 Girona, Girona, España',
 }
 const DEMO_SUBSCRIPTION_VAT_BPS = 2100
+const DEMO_EMAIL_DOMAIN = 'perception.example'
+const DEMO_MEMBER_COUNT = 80
+
+const DEMO_PROFILES = [
+  { id: 'alba', name: 'Alba Martín', dni: 'Z9999990D' },
+  { id: 'marcos', name: 'Marcos García', dni: 'Z9999991X' },
+  { id: 'lucia', name: 'Lucía Torres', dni: 'Z9999992B' },
+  { id: 'pablo', name: 'Pablo Ruiz', dni: 'Z9999993N' },
+  { id: 'nora', name: 'Nora Vidal', dni: 'Z9999994J' },
+  { id: 'david', name: 'David López', dni: 'Z9999995Z' },
+  { id: 'julia', name: 'Julia Costa', dni: 'Z9999996S' },
+  { id: 'hugo', name: 'Hugo Molina', dni: 'Z9999997Q' },
+  { id: 'elena', name: 'Elena Soler', dni: 'Z9999998V' },
+]
+
+function extraDemoProfiles() {
+  const names = [
+    'Ada',
+    'Adrià',
+    'Aina',
+    'Arnau',
+    'Berta',
+    'Bruno',
+    'Carla',
+    'Dídac',
+    'Gala',
+    'Irene',
+    'Jan',
+    'Jana',
+    'Laia',
+    'Leo',
+    'Lola',
+    'Marc',
+    'Marta',
+    'Nil',
+    'Ona',
+    'Oriol',
+    'Paula',
+    'Pol',
+    'Roger',
+    'Sara',
+  ]
+  const surnames = ['Serra', 'Ferrer', 'Pons', 'Navarro', 'Roca', 'Gil', 'Vila']
+  return Array.from({ length: DEMO_MEMBER_COUNT - DEMO_PROFILES.length }, (_, index) => ({
+    id: `socio-${DEMO_PROFILES.length + index + 1}`,
+    name: `${names[index % names.length]} ${surnames[index % surnames.length]}`,
+    dni: undefined,
+  }))
+}
 
 export function createSeed(now = new Date()): ClubState {
   return buildSeed(now, false)
@@ -29,35 +79,28 @@ export function createDemoSeed(now = new Date()): ClubState {
 
 function buildSeed(now: Date, showcase: boolean): ClubState {
   const plans: ClubPlan[] = [{ id: LEGACY_PLAN_ID, name: LEGACY_PLAN_NAME, priceCents: 3900 }]
-  if (showcase) plans.push({ id: 'demo-reduced', name: 'Cuota reducida', priceCents: 2900 })
+  const reducedPlan: ClubPlan = { id: 'demo-reduced', name: 'Cuota reducida', priceCents: 2900 }
+  if (showcase) plans.push(reducedPlan)
   const reducedMembers = new Set(['marcos', 'nora', 'julia'])
-  const people = [
-    ['alba', 'Alba Martín', 'alba@doscientos.example', true, 'Z9999990D'],
-    ['marcos', 'Marcos García', 'marcos@doscientos.example', true, 'Z9999991X'],
-    ['lucia', 'Lucía Torres', 'lucia@doscientos.example', true, 'Z9999992B'],
-    ['pablo', 'Pablo Ruiz', 'pablo@doscientos.example', true, 'Z9999993N'],
-    ['nora', 'Nora Vidal', 'nora@doscientos.example', true, 'Z9999994J'],
-    ['david', 'David López', 'david@doscientos.example', true, 'Z9999995Z'],
-    ['julia', 'Julia Costa', 'julia@doscientos.example', true, 'Z9999996S'],
-    ['hugo', 'Hugo Molina', 'hugo@doscientos.example', true, 'Z9999997Q'],
-    ['elena', 'Elena Soler', 'elena@doscientos.example', false, 'Z9999998V'],
-  ] as const
-  const members: Member[] = people.map(([id, name, email, active, dni], i) => ({
+  const people = showcase ? [...DEMO_PROFILES, ...extraDemoProfiles()] : DEMO_PROFILES
+  const today = dateKey(now)
+  const joinedAt = new Date(startTime(addDays(today, -90), 12)).toISOString()
+  const members: Member[] = people.map(({ id, name, dni }, i) => ({
     id,
     name,
-    email,
-    active,
+    email: `${id}@${DEMO_EMAIL_DOMAIN}`,
+    active: id !== 'elena',
     phone: `600 000 ${String(i + 1).padStart(3, '0')}`,
     ...(showcase && { dni, address: `Calle de Ejemplo, ${i + 1}, 17001 Girona, Girona, España` }),
     role: 'member',
-    planId: showcase && reducedMembers.has(id) ? plans[1].id : LEGACY_PLAN_ID,
+    planId: showcase && reducedMembers.has(id) ? reducedPlan.id : LEGACY_PLAN_ID,
     number: `SC-${String(i + 1).padStart(4, '0')}`,
-    joinedAt: new Date(startTime(addDays(dateKey(now), -90), 12)).toISOString(),
+    joinedAt,
   }))
   members.push({
     id: 'admin',
     name: 'Álex · Administración',
-    email: 'club@doscientos.example',
+    email: `club@${DEMO_EMAIL_DOMAIN}`,
     phone: '900 000 008',
     role: 'admin',
     planId: LEGACY_PLAN_ID,
@@ -65,62 +108,14 @@ function buildSeed(now: Date, showcase: boolean): ClubState {
     number: 'STAFF',
     joinedAt: now.toISOString(),
   })
-  const reservations: Reservation[] = []
+  const players = members.filter((member) => member.role === 'member')
+  const hasCurrentQuota = (member: Member) => member.active && member.id !== 'hugo'
+  const reservations = seedReservations(now, today, players.filter(hasCurrentQuota), showcase)
   const payments: Payment[] = []
-  const today = dateKey(now)
-  const add = (
-    offset: number,
-    hour: number,
-    court: number,
-    memberId: string,
-    cancelled = false,
-  ) => {
-    const index = reservations.length + 1
-    const date = addDays(today, offset)
-    const createdAt = new Date(
-      Math.min(now.getTime(), startTime(addDays(date, -3), 10)),
-    ).toISOString()
-    const reservation: Reservation = {
-      id: `seed-${index}`,
-      memberId,
-      date,
-      hour,
-      court,
-      status: cancelled ? 'cancelled' : 'confirmed',
-      createdAt,
-    }
-    reservations.push(reservation)
-  }
-  for (let offset = showcase ? -55 : -6; offset <= 7; offset++) {
-    const day = new Date(`${addDays(today, offset)}T12:00:00`).getDay()
-    for (let hour = 8; hour < 22; hour++) {
-      const afternoon = hour >= 17 && hour <= 20
-      const density = !afternoon ? 1 : day === 4 || day === 5 ? 11 : 5
-      for (const court of COURTS) {
-        const sample = hour * 7 + court * 3 + offset * 5 + (showcase ? 300 : 70)
-        if (showcase ? sample % 29 < density : sample % 11 < 3) {
-          const index = (hour + court + offset + 70) % 8
-          add(offset, hour, court, people[index][0], showcase && offset < 0 && sample % 7 === 0)
-        }
-      }
-    }
-  }
-  // A recognizable next game for the default profile, without colliding with fixtures.
-  const nextDate = addDays(today, 1)
-  const next = reservations.find(
-    (item) => item.date === nextDate && item.hour === 18 && item.court === 3,
-  )
-  const albaAlreadyBooked = reservations.some(
-    (item) => item.date === nextDate && item.hour === 18 && item.memberId === 'alba',
-  )
-  if (!showcase || !albaAlreadyBooked) {
-    if (next) next.memberId = 'alba'
-    else add(1, 18, 3, 'alba')
-  }
-  for (const member of members.filter((item) => item.role === 'member')) {
+  for (const member of players) {
     const plan = plans.find((item) => item.id === member.planId)!
     for (let offset = -2; offset <= 0; offset++) {
-      if (offset === 0 && (member.id === 'hugo' || !member.active)) continue
+      if (offset === 0 && !hasCurrentQuota(member)) continue
       const month = new Date(now.getFullYear(), now.getMonth() + offset, 1, 12)
       const period = dateKey(month).slice(0, 7)
       const method = RECORDED_PAYMENT_METHODS[payments.length % RECORDED_PAYMENT_METHODS.length]
@@ -161,6 +156,37 @@ function buildSeed(now: Date, showcase: boolean): ClubState {
       closedDates: [],
     },
   }
+}
+
+function seedReservations(now: Date, today: string, players: Member[], showcase: boolean) {
+  const firstDay = showcase ? -55 : -6
+  const hours = [18, 17, 19, 18, 20]
+  const reservations: Reservation[] = []
+  let nextPlayer = 0
+  for (let offset = firstDay; offset <= 7; offset++) {
+    const date = addDays(today, offset)
+    const weekday = new Date(startTime(date, 12)).getDay()
+    const count = weekday === 4 || weekday === 5 ? hours.length : 3
+    const createdAt = new Date(
+      Math.min(now.getTime(), startTime(addDays(date, -3), 10)),
+    ).toISOString()
+    for (let slot = 0; slot < count; slot++) {
+      // Keep a recognizable upcoming booking for Alba and rotate the rest across the roster.
+      const albaExample = offset === 1 && slot === 0
+      const player = albaExample ? players[0] : players[nextPlayer++ % players.length]
+      const court = COURTS[(offset - firstDay + slot * 3) % COURTS.length]
+      reservations.push({
+        id: `seed-${reservations.length + 1}`,
+        memberId: player.id,
+        date,
+        hour: hours[slot],
+        court,
+        status: showcase && offset < 0 && nextPlayer % 13 === 0 ? 'cancelled' : 'confirmed',
+        createdAt,
+      })
+    }
+  }
+  return reservations
 }
 
 function demoExpenses(now: Date): LedgerEntry[] {

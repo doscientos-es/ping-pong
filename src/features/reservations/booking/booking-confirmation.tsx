@@ -5,7 +5,11 @@ import type { Ref } from 'react'
 import { dateLabel, hourLabel } from '../../../shared/format'
 import { Button, ButtonLink, DetailList, SuccessMark } from '../../../shared/ui'
 import type { Reservation } from '../../club/domain/model'
-import { calendarEventFor, createCalendarInvite } from '../calendar-invite'
+import {
+  CALENDAR_INVITE_FILENAME,
+  calendarEventFor,
+  createCalendarInvite,
+} from '../calendar-invite'
 
 export function BookingConfirmation({
   reservation,
@@ -67,7 +71,7 @@ export function BookingConfirmation({
       </div>
       <LinkButton
         href={`data:text/calendar;charset=utf-8,${encodeURIComponent(createCalendarInvite(calendarEventFor(reservation)))}`}
-        download="reserva-doscientos-club.ics"
+        download={CALENDAR_INVITE_FILENAME}
         variant="outline"
         className="max-desktop:min-h-11 w-full"
       >

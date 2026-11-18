@@ -1,4 +1,4 @@
-# Cierre de validación de Doscientos Club
+# Cierre de validación de Perception
 
 ## Alcance
 
@@ -34,9 +34,9 @@ la compilación ni sustituye las comprobaciones manuales siguientes.
 Vite también avisa de una importación sin extensión en su configuración para
 el futuro valor predeterminado `configLoader: 'native'`.
 
-Las pruebas comprueban Doscientos Club en cabeceras, títulos de ruta y
-comprobantes. La verificación PWA valida el nombre Doscientos Club y el nombre
-corto Doscientos, además del título y la descripción de `index.html`.
+Las pruebas comprueban Perception en cabeceras, títulos de ruta y comprobantes.
+La verificación PWA valida la marca Perception en el manifiesto, el título y la
+descripción de `index.html`.
 
 | Área                                    | Evidencia                                                          | Límite                                                       |
 | --------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------ |

@@ -6,8 +6,8 @@ import { fileURLToPath } from 'node:url'
 const dist = fileURLToPath(new URL('../dist/', import.meta.url))
 const read = (name) => readFileSync(`${dist}/${name}`, 'utf8')
 const manifest = JSON.parse(read('manifest.webmanifest'))
-assert.equal(manifest.name, 'Doscientos Club · Reservas de ping-pong')
-assert.equal(manifest.short_name, 'Doscientos')
+assert.equal(manifest.name, 'Perception · Reservas de ping-pong')
+assert.equal(manifest.short_name, 'Perception')
 assert.equal(manifest.display, 'standalone')
 assert.equal(manifest.start_url, '/')
 assert.equal(manifest.scope, '/')
@@ -25,10 +25,10 @@ for (const icon of manifest.icons) {
 }
 assert.ok(existsSync(`${dist}/icons/apple-touch-icon.png`))
 assert.match(read('index.html'), /manifest\.webmanifest/)
-assert.match(read('index.html'), /<title>Doscientos Club · Reservas<\/title>/)
-assert.match(read('index.html'), /gestión de socios de Doscientos Club\./)
+assert.match(read('index.html'), /<title>Perception · Reservas<\/title>/)
+assert.match(read('index.html'), /gestión de socios de Perception\./)
 for (const name of ['index.html', 'manifest.webmanifest']) {
-  assert.doesNotMatch(read(name), /spin\s+club/i, `Outdated branding: ${name}`)
+  assert.doesNotMatch(read(name), /(?:spin\s+club|doscientos)/i, `Outdated branding: ${name}`)
 }
 
 const worker = read('sw.js')

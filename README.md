@@ -1,4 +1,4 @@
-# Doscientos Club · Ping-pong
+# Perception · Ping-pong
 
 Demo local para un club con ocho pistas. Suscripción mensual con **reservas
 ilimitadas incluidas**, sin pagar por partida. Sin backend, Supabase, APIs ni
@@ -35,8 +35,9 @@ cambiar de perfil y cerrar sesión sin borrar los datos del club.
 Los datos iniciales se generan tomando como referencia la fecha del primer
 arranque. Al pasar de mes, las cuotas caducan de verdad: no hay renovación
 automática ni se regeneran datos para aparentar pagos.
-Los ejemplos incluyen dos cuotas, distintas franjas de demanda, cancelaciones
-y gastos de varios meses. Los datos fiscales del club y de los socios son
+Los ejemplos incluyen 80 socios ficticios además del perfil de administración,
+dos cuotas, reservas repartidas entre socios, cancelaciones y gastos de varios meses.
+Los datos fiscales del club y de los socios son
 ficticios; los comprobantes de ejemplo ya incluyen emisor, destinatario, IVA y
 método de pago. Administración puede regenerar estos datos desde
 **Configuración → Datos de demostración → Reiniciar demo**.
@@ -227,7 +228,7 @@ Usar la URL mostrada por Vite. Servir siempre en la raíz del dominio.
 - El reinicio de la demo requiere confirmación. Sustituye los datos locales del club
   por nuevos ejemplos y cierra la sesión. No se puede deshacer, no borra otros datos
   del navegador y no se ejecuta al actualizar la app.
-- La marca es Doscientos Club. Las claves internas anteriores y el evento de
+- La marca es Perception. Las claves internas anteriores y el evento de
   sincronización se conservan por compatibilidad: renombrarlos perdería el acceso
   a los datos existentes. No se modifican socios, pagos ni comprobantes guardados.
 - Los datos con cuota única se adaptan al leer: **Cuota general** conserva el precio

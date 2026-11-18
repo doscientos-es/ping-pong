@@ -1,4 +1,4 @@
-# Doscientos Club · demo de reservas
+# Perception · demo de reservas
 
 ## Objetivo y límites
 
@@ -12,7 +12,7 @@ demostrar los flujos, pero no sustituyen autorización en servidor.
 
 ## Decisiones de producto
 
-- Marca: **Doscientos Club**; nombre corto de la PWA: **Doscientos**.
+- Marca y nombre corto de la PWA: **Perception**.
   Identidad compartida en `src/shared/brand.ts`. Idioma español, formato europeo.
 - El cambio de marca conserva las claves de almacenamiento y el evento de
   sincronización existentes para no perder datos ni romper otras pestañas.

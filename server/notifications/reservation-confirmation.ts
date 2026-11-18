@@ -4,6 +4,7 @@ import {
   createCalendarInvite,
   type CalendarEvent,
 } from '../../src/features/reservations/calendar-invite'
+import { CLUB_NAME } from '../../src/shared/brand'
 
 export interface ReservationConfirmation {
   event: CalendarEvent
@@ -59,10 +60,10 @@ export async function sendReservationConfirmation(
       'Idempotency-Key': `reservation-confirmed/${event.reservationId}`,
     },
     body: JSON.stringify({
-      from: `Doscientos Club <${fromEmail}>`,
+      from: `${CLUB_NAME} <${fromEmail}>`,
       to: [recipient.email],
-      subject: 'Reserva confirmada · Doscientos Club',
-      text: `Hola ${recipient.name},\n\nTu reserva está confirmada.\nPista ${event.court}\n${date} – ${end}\n\nAdjuntamos una invitación para tu calendario.\n\nDoscientos Club`,
+      subject: `Reserva confirmada · ${CLUB_NAME}`,
+      text: `Hola ${recipient.name},\n\nTu reserva está confirmada.\nPista ${event.court}\n${date} – ${end}\n\nAdjuntamos una invitación para tu calendario.\n\n${CLUB_NAME}`,
       attachments: [
         {
           filename: 'reserva.ics',
