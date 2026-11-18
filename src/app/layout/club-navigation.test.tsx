@@ -90,10 +90,7 @@ describe('navegación del club', () => {
 
     const sidebar = screen.getByRole('complementary')
     expect(within(sidebar).getByText('Administración')).toBeInTheDocument()
-    expect(within(sidebar).getByRole('link', { name: 'Doscientos Club.' })).toHaveAttribute(
-      'href',
-      '/',
-    )
+    expect(within(sidebar).getByRole('link', { name: 'Perception.' })).toHaveAttribute('href', '/')
     const profile = within(sidebar).getByRole('button', {
       name: 'Menú de usuario de la barra lateral',
     })

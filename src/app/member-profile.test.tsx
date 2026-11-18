@@ -24,7 +24,7 @@ describe('ficha de socio', () => {
     await user.click(link)
     await screen.findByRole('heading', { name: 'Ficha del socio', level: 1 })
     expect(window.location.pathname).toBe('/socios/alba')
-    expect(document.title).toBe('Ficha del socio · Doscientos Club')
+    expect(document.title).toBe('Ficha del socio · Perception')
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(screen.getByText('Cancelada')).toBeVisible()
     expect(screen.getByText('Anulado')).toBeVisible()
@@ -62,7 +62,7 @@ describe('ficha de socio', () => {
     const app = render(<App gateway={gateway} />)
     await screen.findByRole('heading', { name: 'Ficha del socio' })
     fireEvent.change(screen.getByLabelText('Email'), {
-      target: { value: 'marcos@doscientos.example' },
+      target: { value: 'marcos@perception.example' },
     })
     await user.click(screen.getByRole('button', { name: 'Guardar cambios' }))
     expect(await screen.findByRole('alert')).toHaveTextContent('Ya existe')

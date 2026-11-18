@@ -30,7 +30,7 @@ describe('composición y rutas por rol', () => {
     await screen.findByRole('button', { name: /Álex · Administración/ })
     expect(window.location.pathname).toBe('/login')
     expect(window.location.hash).toBe('')
-    await waitFor(() => expect(document.title).toBe('Iniciar sesión · Doscientos Club'))
+    await waitFor(() => expect(document.title).toBe('Iniciar sesión · Perception'))
     expect(screen.queryByRole('navigation')).not.toBeInTheDocument()
     expect(screen.queryByLabelText('Ir a una fecha')).not.toBeInTheDocument()
   })
@@ -86,9 +86,8 @@ describe('composición y rutas por rol', () => {
     window.history.replaceState(null, '', '/configuracion')
     render(<App gateway={gateway} />)
     await screen.findByRole('heading', { name: 'Configuración', level: 1 })
-    expect(document.title).toBe('Configuración · Doscientos Club')
-    expect(screen.getByRole('link', { name: 'Doscientos Club.' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Doscientos.' })).toBeInTheDocument()
+    expect(document.title).toBe('Configuración · Perception')
+    expect(screen.getAllByRole('link', { name: 'Perception.' })).toHaveLength(2)
     const navigation = screen.getByRole('navigation', { name: 'Navegación principal' })
     expect(within(navigation).getByRole('link', { name: 'Configuración' })).toHaveAttribute(
       'aria-current',

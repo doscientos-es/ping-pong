@@ -30,7 +30,7 @@ describe('confirmación de reserva', () => {
       </MemoryRouter>,
     )
     const link = screen.getByRole('link', { name: 'Añadir al calendario' })
-    expect(link).toHaveAttribute('download', 'reserva-doscientos-club.ics')
+    expect(link).toHaveAttribute('download', 'reserva-perception.ics')
     const href = link.getAttribute('href')!
     expect(href).toMatch(/^data:text\/calendar;charset=utf-8,/)
     const calendar = decodeURIComponent(href.split(',')[1])
@@ -44,7 +44,7 @@ describe('confirmación de reserva', () => {
     expect(calendar).toContain('UID:reserva-123@doscientos.club\r\n')
     expect(calendar).toContain(`DTSTART:${utc(start)}\r\n`)
     expect(calendar).toContain(`DTEND:${utc(start + 60 * 60 * 1000)}\r\n`)
-    expect(calendar).toContain('Doscientos Club · Pista 3')
+    expect(calendar).toContain('Perception · Pista 3')
     expect(screen.getByText(/no se actualizan automáticamente/)).toBeInTheDocument()
   })
 })

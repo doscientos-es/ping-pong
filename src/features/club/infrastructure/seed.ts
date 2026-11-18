@@ -171,17 +171,19 @@ function seedReservations(now: Date, today: string, players: Member[], showcase:
       Math.min(now.getTime(), startTime(addDays(date, -3), 10)),
     ).toISOString()
     for (let slot = 0; slot < count; slot++) {
-      // Keep a recognizable upcoming booking for Alba and rotate the rest across the roster.
-      const albaExample = offset === 1 && slot === 0
-      const player = albaExample ? players[0] : players[nextPlayer++ % players.length]
+      // Keep recognizable bookings for the active and pending demo profiles.
+      const example =
+        slot === 0 && (offset === 1 ? 'alba' : showcase && offset === -35 ? 'hugo' : undefined)
+      const memberId = example || players[nextPlayer++ % players.length].id
       const court = COURTS[(offset - firstDay + slot * 3) % COURTS.length]
       reservations.push({
         id: `seed-${reservations.length + 1}`,
-        memberId: player.id,
+        memberId,
         date,
         hour: hours[slot],
         court,
-        status: showcase && offset < 0 && nextPlayer % 13 === 0 ? 'cancelled' : 'confirmed',
+        status:
+          showcase && offset < 0 && !example && nextPlayer % 13 === 0 ? 'cancelled' : 'confirmed',
         createdAt,
       })
     }

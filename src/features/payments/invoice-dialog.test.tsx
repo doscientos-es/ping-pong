@@ -45,11 +45,11 @@ describe('acciones del comprobante (APIs de descarga e impresión simuladas)', (
       },
     )
     let download: { href: string; filename: string } | undefined
-    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (
-      this: HTMLAnchorElement,
-    ) {
-      download = { href: this.href, filename: this.download }
-    })
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(
+      function (this: HTMLAnchorElement) {
+        download = { href: this.href, filename: this.download }
+      },
+    )
     const payment = createSeed().payments[0]
     payment.invoiceNumber = 'DEMO/2026:01'
     render(<InvoiceDialog payment={payment} onClose={vi.fn()} />)
@@ -73,8 +73,8 @@ describe('acciones del comprobante (APIs de descarga e impresión simuladas)', (
       const print = vi.spyOn(window, 'print').mockImplementation(() => {})
       render(<InvoiceDialog payment={payment} onClose={vi.fn()} />)
       const dialog = screen.getByRole('dialog', { name: 'Tu comprobante' })
-      expect(dialog).toHaveTextContent('Doscientos Club.')
-      expect(dialog).toHaveTextContent('Suscripción mensual · Doscientos Club')
+      expect(dialog).toHaveTextContent('Perception.')
+      expect(dialog).toHaveTextContent('Suscripción mensual · Perception')
       expect(dialog).toHaveTextContent(status === 'paid' ? 'Pagado · demo' : 'Anulado · demo')
       expect(dialog).toHaveTextContent('SIN VALIDEZ FISCAL')
       expect(dialog).toHaveTextContent('momento del pago de la cuota')

@@ -20,7 +20,7 @@ describe('documentos mensuales locales', () => {
     payment.status = 'voided'
     payment.voidedAt = new Date(2026, 10, 17, 12).toISOString()
     const html = invoiceHtml(payment)
-    expect(html).toContain('<h1>Doscientos Club.</h1>')
+    expect(html).toContain('<h1>Perception.</h1>')
     expect(html).toContain('septiembre de 2026')
     expect(html).toContain('Reservas ilimitadas')
     expect(html).toContain('SIN VALIDEZ FISCAL')
